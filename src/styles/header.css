@@ -1,0 +1,81 @@
+/* src/styles/header.css */
+
+.header-custom {
+  padding: 0.8rem 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo de la marca/logo */
+.navbar-brand-custom {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #ffffff !important;
+}
+
+/* Estilo para los enlaces de navegación */
+.navbar-nav .nav-link {
+  font-size: 1rem;
+  font-weight: 500;
+  transition: color 0.2s ease-in-out;
+}
+
+.navbar-nav .nav-link:hover {
+  color: #0d6efd !important; /* Azul de Bootstrap */
+}
+
+/* Estilo para la barra de búsqueda */
+.header-search {
+  min-width: 250px;
+}
+
+.header-search .form-control {
+  background-color: #495057;
+  border-color: #6c757d;
+  color: #f8f9fa;
+}
+
+.header-search .form-control::placeholder {
+  color: #adb5bd;
+}
+
+.header-search .form-control:focus {
+  background-color: #495057;
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  color: #f8f9fa;
+}
+
+/* Botón de Registro llamativo */
+.btn-register {
+  font-weight: 600;
+  transition: transform 0.2s ease;
+}
+
+.btn-register:hover {
+  transform: scale(1.05);
+}
+
+/* Icono de Avatar de Usuario */
+.user-avatar-icon {
+  font-size: 2rem; /* Tamaño del ícono */
+  color: #adb5bd; /* Color grisáceo */
+  transition: color 0.2s ease;
+  margin-left: 1rem;
+}
+
+.user-avatar-icon:hover {
+  color: #ffffff; /* Blanco al pasar el ratón */
+}
+
+/* Ajustes para móvil */
+@media (max-width: 991px) {
+  .header-search {
+    min-width: 100%;
+    margin: 1rem 0; /* Espacio en el menú desplegado */
+  }
+
+  .user-avatar-icon {
+    margin-left: 0;
+    margin-top: 0.5rem;
+  }
+}

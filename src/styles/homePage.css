@@ -1,0 +1,11 @@
+/* src/App.css */
+
+.app-container {
+  display: flex; /* 1. Activa Flexbox */
+  flex-direction: column; /* 2. Apila los hijos verticalmente (Header, main, Footer) */
+  min-height: 100vh; /* 3. Asegura que el contenedor ocupe AL MENOS el 100% de la altura de la pantalla */
+}
+
+.main-content {
+  flex-grow: 1; /* 4. (¡La magia!) Hace que el contenido principal "crezca" y empuje al Footer hacia abajo, ocupando todo el espacio sobrante. */
+}

@@ -1,19 +1,34 @@
 import {BrowserRouter, Routes, Route} from "react-router-dom"
-import { HomePage } from "../pages/HomePage"
+import { HomePage } from "../pages/HomePage.jsx"
+import LoginPage from "../pages/LoginPage.jsx"
+import { AuthProvider, useAuth } from "../context/AuthContext.jsx";
 
-export const AppRouter = () => {
+function AppRouter() {
+  return (
+    <AuthProvider>
+      <AppLR />
+    </AuthProvider>
+  );
+}
+
+function AppLR() {
+    const auth = useAuth(); // hook useAuth para obtener la información del usuario
     return (
-        <>
+        
             <BrowserRouter>
 
                 <Routes>
 
-                    <Route path="/login"/>
+                    <Route path="/login" element={<LoginPage/>}/>
                     <Route path="/home" element={<HomePage/>}/>
+                    <Route path="/" element={<HomePage/>}/>
+
 
                 </Routes>
 
             </BrowserRouter>
-        </>
-    )
-} 
+        
+    );
+}
+
+export default AppRouter;

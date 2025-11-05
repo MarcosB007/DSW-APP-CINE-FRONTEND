@@ -7,7 +7,7 @@ import Header from './Header';
 import Footer from './Footer';
 import "../styles/login.css"
 
-function LoginPage () {
+function LoginPage() {
 
     const { register, handleSubmit, formState: { errors } } = useForm();
     const { signIn, errors: signInErrors, isAuthenticated, user } = useAuth();
@@ -45,21 +45,26 @@ function LoginPage () {
     });
 
     useEffect(() => {
-        if (isAuthenticated) {
-            if (user) {
-                if (user.role === 'admin') {
-                    navigate('/admin');
-                }
+        // Solo toma una decisión CUANDO estés autenticado Y el objeto user esté listo
+        if (isAuthenticated && user) {
+
+            // Asumiendo que tu backend ahora devuelve { ..., role: "admin" } o { ..., role: "user" }
+            // (Si sigues usando ROL_id, cambia 'user.role' por 'user.ROL_id' y "admin" por 2)
+
+            if (user.role === 'admin') {
+                navigate('/home'); // El admin va a /admin
             } else {
-                navigate('/');
+                navigate('/login');  // Todos los demás (ej. 'user') van a /home
             }
         }
+        // Si 'isAuthenticated' es true pero 'user' es null, 
+        // este hook no hace nada y espera al siguiente render (cuando 'user' cargue).
     }, [isAuthenticated, user, navigate]);
 
     return (
         <div className='contenedorTodo'>
             <Header />
-            
+
             <div className='contenedor1'>
                 <div>
                     {Array.isArray(signInErrors) ? (

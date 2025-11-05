@@ -10,6 +10,7 @@ import {
 } from 'react-bootstrap';
 import { FaUserCircle, FaSearch } from 'react-icons/fa'; // Iconos
 import '../styles/header.css';
+import { Link } from 'react-router-dom';
 
 function Header() {
   
@@ -24,7 +25,7 @@ function Header() {
     <Navbar bg="dark" data-bs-theme="dark" expand="lg" className="header-custom">
       <Container>
         {/* 1. Logo/Marca */}
-        <Navbar.Brand href="#home" className="navbar-brand-custom">
+        <Navbar.Brand as={Link} to="/home" href="#home" className="navbar-brand-custom">
           Mi App Cine
         </Navbar.Brand>
         
@@ -36,7 +37,7 @@ function Header() {
           
           {/* 3a. Enlaces de Navegación (Izquierda) */}
           <Nav className="me-auto">
-            <Nav.Link href="#home">Inicio</Nav.Link>
+            <Nav.Link as={Link} to="/" href="#home">Inicio</Nav.Link>
             <Nav.Link href="#peliculas">Películas</Nav.Link>
             <Nav.Link href="#series">Series</Nav.Link>
             
@@ -79,7 +80,7 @@ function Header() {
             ) : (
               // -- NO ESTÁ LOGUEADO --
               <>
-                <Nav.Link href="#login" className="ms-lg-3">Iniciar Sesión</Nav.Link>
+                <Nav.Link as={Link} to="/login" className="ms-lg-3">Iniciar Sesión</Nav.Link>
                 <Button variant="primary" href="#register" className="ms-2 btn-register">
                   Registrarse
                 </Button>

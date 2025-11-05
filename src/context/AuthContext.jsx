@@ -5,19 +5,19 @@ export const AuthContext = createContext();
 
 export const useAuth = () => {
     const context = useContext(AuthContext);
-    if(!context) throw new Error("useAuth debería estar dentro de AuthProvider");
+    if (!context) throw new Error("useAuth debería estar dentro de AuthProvider");
     return context;
 };
 
 export const AuthProvider = ({ children }) => {
-    const[user, setUser] = useState(null);
-    const[isAuthenticated, setIsAuthenticated] = useState(false);
-    const[errors, setErrors] = useState([]);
-    const[loading, setLoading] = useState(true);
+    const [user, setUser] = useState(null);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [errors, setErrors] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     //HACEMOS DESAPARECER CUALQUIER MENSAJE DE ERROR LUEGO DE 5 SEGUNDOS
     useEffect(() => {
-        if(errors && errors.length > 0){
+        if (errors && errors.length > 0) {
             const timner = setTimeout(() => {
                 setErrors([]);
             }, 5000);
@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
     const singUp = async (user) => {
         try {
             const res = await registerRequest(user);
-            if(res.status === 200){
+            if (res.status === 200) {
                 const token = res.data.token;
                 setAuthToken(token);
                 Cookies.set("token", res.data.token);
@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }) => {
             }
         } catch (error) {
             console.log(error.response.data);
-            setErrors(error.response.data.message);   
+            setErrors(error.response.data.message);
         }
     };
 
@@ -65,34 +65,43 @@ export const AuthProvider = ({ children }) => {
     async function checkLogin() {
         const token = Cookies.get("token");
         if (!token) {
-        setIsAuthenticated(false);
-        setUser(null);
-        setLoading(false);
-        setAuthToken(null);
-        return;
+            setIsAuthenticated(false);
+            setUser(null);
+            setLoading(false);
+            setAuthToken(null);
+            return;
         }
 
         try {
-        const res = await verifyTokenRequest(token);
+            const res = await verifyTokenRequest(token);
 
-        if (!res.data) {
+            if (!res.data) {
+                setIsAuthenticated(false);
+                setUser(null);
+                setAuthToken(null);
+            } else {
+                setIsAuthenticated(true);
+                setUser(res.data);
+            }
+            setLoading(false);
+        } catch (error) {
+
+            if (error.response && error.response.status === 401) {
+                
+            } else {
+
+                console.error('Error al verificar el token:', error);
+            }
+
             setIsAuthenticated(false);
             setUser(null);
-            setAuthToken(null);
-        } else {
-            setIsAuthenticated(true);
-            setUser(res.data);
-        }
-        setLoading(false);
-        } catch (error) {
-        setIsAuthenticated(false);
-        setLoading(false);
+            setLoading(false);
         }
     }
 
     useEffect(() => {
         const storedToken = Cookies.get("token");
-        if(storedToken){
+        if (storedToken) {
             setAuthToken(storedToken)
         }
     }, []);
@@ -101,20 +110,20 @@ export const AuthProvider = ({ children }) => {
         checkLogin();
     }, []);
 
-    return(
+    return (
 
         <AuthContext.Provider
-        value={{
-            singUp,
-            signIn,
-            loading,
-            user,
-            logout,
-            isAuthenticated,
-            errors,
-        }}
+            value={{
+                singUp,
+                signIn,
+                loading,
+                user,
+                logout,
+                isAuthenticated,
+                errors,
+            }}
         >
-        {children}
+            {children}
         </AuthContext.Provider>
     )
 }

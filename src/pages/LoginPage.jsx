@@ -45,20 +45,15 @@ function LoginPage() {
     });
 
     useEffect(() => {
-        // Solo toma una decisión CUANDO estés autenticado Y el objeto user esté listo
+
         if (isAuthenticated && user) {
 
-            // Asumiendo que tu backend ahora devuelve { ..., role: "admin" } o { ..., role: "user" }
-            // (Si sigues usando ROL_id, cambia 'user.role' por 'user.ROL_id' y "admin" por 2)
-
-            if (user.role === 'admin') {
-                navigate('/home'); // El admin va a /admin
+            if (user.rol === 'admin') {
+                navigate('/home');
             } else {
-                navigate('/login');  // Todos los demás (ej. 'user') van a /home
+                navigate('/login'); 
             }
         }
-        // Si 'isAuthenticated' es true pero 'user' es null, 
-        // este hook no hace nada y espera al siguiente render (cuando 'user' cargue).
     }, [isAuthenticated, user, navigate]);
 
     return (

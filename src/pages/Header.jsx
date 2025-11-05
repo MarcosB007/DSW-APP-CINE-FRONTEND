@@ -26,7 +26,7 @@ function Header() {
     swal.fire({
       title: "Cerrando sesión...",
       timer: 2000, // Espera 2 segundos antes de redirigir
-      buttons: false,
+      showConfirmButton: false,
       icon: "success",
       position: "center",
       background: 'black',

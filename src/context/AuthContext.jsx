@@ -14,6 +14,7 @@ export const AuthProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [errors, setErrors] = useState([]);
     const [loading, setLoading] = useState(true);
+    
 
     //HACEMOS DESAPARECER CUALQUIER MENSAJE DE ERROR LUEGO DE 5 SEGUNDOS
     useEffect(() => {
@@ -25,7 +26,7 @@ export const AuthProvider = ({ children }) => {
         }
     }, [errors]);
 
-    const singUp = async (user) => {
+    const signUp = async (user) => {
         try {
             const res = await registerRequest(user);
             if (res.status === 200) {
@@ -38,6 +39,8 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
             console.log(error.response.data);
             setErrors(error.response.data.message);
+            throw error;
+
         }
     };
 
@@ -114,7 +117,7 @@ export const AuthProvider = ({ children }) => {
 
         <AuthContext.Provider
             value={{
-                singUp,
+                signUp,
                 signIn,
                 loading,
                 user,

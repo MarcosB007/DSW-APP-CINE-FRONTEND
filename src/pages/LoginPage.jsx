@@ -51,7 +51,7 @@ function LoginPage() {
             if (user.rol === 'admin') {
                 navigate('/home');
             } else {
-                navigate('/login'); 
+                navigate('/home'); 
             }
         }
     }, [isAuthenticated, user, navigate]);
@@ -104,12 +104,12 @@ function LoginPage() {
                                 maxLength={30}
                             />
                             {/* Icono de ojo */}
-                            {/* <img
-                                src={showPassword ? ojoAbierto : ojoCerrado}
-                                alt={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
-                                className='password-toggle-icon'
-                                onClick={() => setShowPassword(!showPassword)}
-                            /> */}
+                            <img
+                                //src={showPassword ? ojoAbierto : ojoCerrado}
+                                //alt={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                                //className='password-toggle-icon'
+                                //onClick={() => setShowPassword(!showPassword)}
+                            />
                         </div>
                         {errors.password && (
                             <p className='texto-validacion'>La contraseña debe ser mayor a 4 caracteres</p>

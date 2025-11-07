@@ -8,20 +8,21 @@ import Footer from './Footer';
 import Swal from 'sweetalert2';
 
 
-export const RegisterPage = () => {
+function RegisterPage() {
 
     const { register, handleSubmit, setError, formState: { errors } } = useForm();
     const { signUp, errors: registerErrors, isAuthenticated } = useAuth();
     const navigate = useNavigate();
+    //const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false); // Nuevo estado para Confirmar Contraseña
     const regex = /^[^@]+@[^@]+\.[a-zA-Z]{2,}$/;
 
     useEffect(() => {
-        if (isAuthenticated) navigate('/');
+        if (isAuthenticated) navigate('/home');
     }, [isAuthenticated, navigate]);
 
     const onSubmit = handleSubmit(async (values) => {
-        if (values.password !== values.passwordConfirmation) {
+        if (values.contrasenia !== values.passwordConfirmation) {
             setError('passwordConfirmation', {
                 type: 'manual',
                 message: 'Las contraseñas no coinciden',
@@ -47,16 +48,35 @@ export const RegisterPage = () => {
             return;
         }
 
-        // Verificar si el email es de un administrador
-        //const adminEmails = ['paulo101@gmail.com', 'augusto101@gmail.com', 'nico101@gmail.com', 'santiago101@gmail.com'];
-        //const isAdmin = adminEmails.includes(values.email);
+        try {
 
-        // Agrego propiedad "isAdmin" al objeto de registro
-        //values.isAdmin = isAdmin;
+            await signUp(values);
 
-        signUp(values);
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Registro fallido',
+                text:
+                    error.response?.data?.message ||
+                    'Ocurrió un error al registrar el usuario.',
+                background: 'black',
+            });
+        }
 
-    })
+    });
+
+    useEffect(() => {
+
+        if (isAuthenticated) {
+
+            if (user.rol === 'admin') {
+                navigate('/home');
+            } else {
+                navigate('/home');
+            }
+        }
+    }, [isAuthenticated, navigate]);
+
 
     return (
         <div className='contenedorTodo'>
@@ -133,12 +153,11 @@ export const RegisterPage = () => {
                             type='date'
                             {...register("fechanacimiento", { required: true })}
                             className='inputsR'
-                            placeholder='Ej: John@gmail.com'
                             id='fechanacimiento'
 
                         />
                         {errors.email && (
-                            <p className='texto-validacion'>El email es obligatorio</p>
+                            <p className='texto-validacion'>La fecha de nacimiento es obligatoria</p>
                         )}
 
                         <label htmlFor="contrasenia" className='labels'>Contraseña ↓</label>
@@ -169,7 +188,7 @@ export const RegisterPage = () => {
                         <div className='password-input-container'>
                             {/* Campo de Confirmar Contraseña */}
                             <input
-                                //type={showConfirmPassword ? "text" : "password"}
+                                type={showConfirmPassword ? "text" : "password"}
                                 {...register("passwordConfirmation", { required: true })}
                                 className='inputsR'
                                 placeholder='Confirmar contraseña'
@@ -177,12 +196,12 @@ export const RegisterPage = () => {
                                 maxLength={30}
                             />
                             {/* Icono de ojo para Confirmar Contraseña */}
-                            {/* <img
-                                src={showConfirmPassword ? ojoAbierto : ojoCerrado}
-                                alt={showConfirmPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                            <img
+                                // src={showConfirmPassword ? ojoAbierto : ojoCerrado}
+                                // alt={showConfirmPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
                                 className='password-toggle-icon'
                                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                            /> */}
+                            />
                         </div>
                         {errors.passwordConfirmation && (
                             <p className='texto-validacion'>{errors.passwordConfirmation.message}</p>

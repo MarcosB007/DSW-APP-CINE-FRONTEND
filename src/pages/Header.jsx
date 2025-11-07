@@ -108,9 +108,11 @@ function Header() {
               // -- NO ESTÁ LOGUEADO --
               <>
                 <Nav.Link as={Link} to="/login" className="ms-lg-3">Iniciar Sesión</Nav.Link>
-                <Button variant="primary" href="#register" className="ms-2 btn-register">
-                  Registrarse
-                </Button>
+                <Link to="/register">
+                  <Button variant="primary" className="ms-2 btn-register">
+                    Registrarse
+                  </Button>
+                </Link>
               </>
             )}
           </Nav>

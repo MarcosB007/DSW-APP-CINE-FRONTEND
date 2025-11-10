@@ -1,9 +1,14 @@
 body {
   
-  background-image: url('/src/assets/images/fondos/burguer.jpg') !important;
+  background-image: url('/src/assets/images/fondos/fondo-cine-login.jpg.jpg') !important;
+  /* --- Añade estas propiedades para controlar el tamaño y la posición del fondo --- */
+    background-size: cover;          /* Hace que la imagen cubra todo el área sin distorsionar */
+    background-position: center center; /* Centra la imagen en el fondo */
+    background-repeat: no-repeat;    /* Evita que la imagen se repita */
+    background-attachment: fixed;    /* Mantiene la imagen fija al hacer scroll (opcional) */
 }
 
-body::before {
+/*body::before {
 	content: "";
 	position: fixed;
 	top: 0;
@@ -11,8 +16,8 @@ body::before {
 	width: 100%;
 	height: 100%;
 	background-color: #004aad; /* Negro al 50% de opacidad = reduce brillo */
-	z-index: -1;
-}
+	/*z-index: -1;
+}*/
 
 
 .contenedor1 {
@@ -22,9 +27,12 @@ body::before {
   margin: 0 auto;
   padding: 2.5em;
   border-radius: 1em;
-  margin-top: 1.5em;
-  margin-bottom: 3em;
+  margin-top: 0;
+  margin-bottom: 0;
   color: #ffffff;
+  position: relative;
+  top: -150px;
+  
 }
 
 .inputs {
@@ -40,17 +48,19 @@ body::before {
 }
 
 .link-login {
-  color: #004aad; /* Cambiado de orange a azul */
+  color: #e74c3c; 
   font-size: 15px;
   transition: 0.6s;
 }
 
 .texto-loginR {
-  color: #fff; /* Cambiado de yellow a azul */
+  color: #fff; 
   font-size: 12px;
   text-align: center;
   justify-content: center;
   align-items: center;
+  margin-top: 30px;
+  
 }
 
 .titulo-lr {
@@ -60,7 +70,7 @@ body::before {
 }
 
 .link-login:hover {
-  color: #003366; /* Azul más oscuro para hover */
+  color: #C0392B; 
 }
 
 .labels {
@@ -107,7 +117,7 @@ body::before {
   color: white;
   margin: 1em;
   text-decoration: none;
-  background-color: #004aad; /* Cambiado de rgb(32,171,32) a azul */
+  background-color: #E74C3C; 
   padding: 1em;
   border-radius: .5em;
   font-size: 15px;
@@ -115,7 +125,7 @@ body::before {
 }
 
 .link-nav:hover {
-  background-color: #003366; /* Azul más oscuro para hover */
+  background-color: #C0392B; 
 }
 
 .inputsR {
@@ -172,16 +182,20 @@ body::before {
   letter-spacing: 4px;
   background-color: #000; /* Negro se mantiene igual */
   border: none;
+  margin-left:auto;
+  margin-right: auto;
+  display: block;
 }
 
 .boton-login:hover {
-  background: #004aad;
+  background: #6a1006;
   color: #fff;
   border-radius: 5px;
-  box-shadow: 0 0 5px #004aad,
-    0 0 25px #004aad,
-    0 0 50px #004aad,
-    0 0 100px #004aad;
+  box-shadow: 0 0 5px #E74C3C,
+    0 0 25px #E74C3C,
+    0 0 50px #E74C3C,
+    0 0 100px #E74C3C;
+  
 }
 
 .boton-login span {
@@ -190,24 +204,25 @@ body::before {
 }
 
 .boton-login span:nth-child(1) {
-  background: linear-gradient(90deg, transparent, #004aad); /* Cambiado a azul */
+  background: linear-gradient(90deg, transparent, #E74C3C); 
 }
 
 .boton-login span:nth-child(2) {
-  background: linear-gradient(180deg, transparent, #004aad); /* Cambiado a azul */
+  background: linear-gradient(180deg, transparent, #E74C3C); 
 }
 
 .boton-login span:nth-child(3) {
-  background: linear-gradient(270deg, transparent, #004aad); /* Cambiado a azul */
+  background: linear-gradient(270deg, transparent, #E74C3C);
 }
 
 .boton-login span:nth-child(4) {
-  background: linear-gradient(360deg, transparent, #004aad); /* Cambiado a azul */
+  background: linear-gradient(360deg, transparent,#E74C3C); 
 }
 
 .password-input-container {
   display: flex;
   align-items: center;
+  margin-bottom: -10px;
 }
 
 .password-toggle-icon {

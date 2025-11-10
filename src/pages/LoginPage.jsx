@@ -7,6 +7,7 @@ import Header from './Header';
 import Footer from './Footer';
 import "../styles/login.css"
 
+
 function LoginPage() {
 
     const { register, handleSubmit, formState: { errors } } = useForm();

@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [errors, setErrors] = useState([]);
     const [loading, setLoading] = useState(true);
-    
+
 
     //HACEMOS DESAPARECER CUALQUIER MENSAJE DE ERROR LUEGO DE 5 SEGUNDOS
     useEffect(() => {
@@ -29,13 +29,13 @@ export const AuthProvider = ({ children }) => {
     const signUp = async (user) => {
         try {
             const res = await registerRequest(user);
-            if (res.status === 200) {
-                const token = res.data.token;
-                setAuthToken(token);
-                Cookies.set("token", res.data.token);
-                setIsAuthenticated(true);
-                checkLogin();
-            }
+            const token = res.data.token;
+            const userData = res.data.user;
+            setAuthToken(token);
+            Cookies.set("token", res.data.token);
+            setUser(userData);
+            setIsAuthenticated(true);
+            checkLogin();
         } catch (error) {
             console.log(error.response.data);
             setErrors(error.response.data.message);
@@ -90,7 +90,7 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
 
             if (error.response && error.response.status === 401) {
-                
+
             } else {
 
                 console.error('Error al verificar el token:', error);

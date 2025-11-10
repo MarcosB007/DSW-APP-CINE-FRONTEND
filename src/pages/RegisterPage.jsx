@@ -52,6 +52,20 @@ function RegisterPage() {
 
             await signUp(values);
 
+            Swal.fire({
+                icon: 'success',
+                title: '¡Registro Exitoso!',
+                text: 'Usuario creado correctamente.',
+                background: 'black', // Para mantener tu estilo
+                timer: 3000, // 3 segundos
+                showConfirmButton: false, // Oculta el botón "OK"
+                customClass: { // Re-usa tus clases de estilo si quieres
+                    title: 'custom-swal-title',
+                    popup: 'custom-swal-container',
+                },
+            });
+
+
         } catch (error) {
             Swal.fire({
                 icon: 'error',
@@ -64,18 +78,6 @@ function RegisterPage() {
         }
 
     });
-
-    useEffect(() => {
-
-        if (isAuthenticated) {
-
-            if (user.rol === 'admin') {
-                navigate('/home');
-            } else {
-                navigate('/home');
-            }
-        }
-    }, [isAuthenticated, navigate]);
 
 
     return (

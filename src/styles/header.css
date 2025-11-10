@@ -2,7 +2,12 @@
 
 .header-custom {
   padding: 0.8rem 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
 }
 
 /* Estilo de la marca/logo */
@@ -10,17 +15,20 @@
   font-size: 1.6rem;
   font-weight: 700;
   color: #ffffff !important;
+  display: flex; 
+  align-items: center;
 }
 
 /* Estilo para los enlaces de navegación */
 .navbar-nav .nav-link {
   font-size: 1rem;
   font-weight: 500;
+  color: #adb5bd !important;
   transition: color 0.2s ease-in-out;
 }
 
 .navbar-nav .nav-link:hover {
-  color: #0d6efd !important; /* Azul de Bootstrap */
+  color: #E74C3C !important; 
 }
 
 /* Estilo para la barra de búsqueda */
@@ -40,25 +48,46 @@
 
 .header-search .form-control:focus {
   background-color: #495057;
-  border-color: #0d6efd;
-  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  border-color:#E74C3C;
+  box-shadow: 0 0 0 0.25rem rgba(231, 76, 60, 0.25);
   color: #f8f9fa;
+}
+
+/* Botón de búsqueda (la lupa) */
+.header-search .btn-outline-primary {
+    color: #E74C3C; /* Color del icono */
+    border-color: #E74C3C; /* Borde */
+}
+
+.header-search .btn-outline-primary:hover {
+    background-color: #E74C3C;
+    border-color: #E74C3C;
+    color: #ffffff;
 }
 
 /* Botón de Registro llamativo */
 .btn-register {
   font-weight: 600;
   transition: transform 0.2s ease;
+  background-color: #E74C3C !important; /* Fondo rojo/naranja */
+  border-color: #E74C3C !important;
 }
 
 .btn-register:hover {
   transform: scale(1.05);
+  background-color: #C0392B !important; /* Rojo más oscuro al hover */
+  border-color: #C0392B !important;
+}
+
+/* Enlace "Iniciar Sesión"*/
+.ms-lg-3:hover {
+    color: #E74C3C !important;
 }
 
 /* Icono de Avatar de Usuario */
 .user-avatar-icon {
   font-size: 2rem; /* Tamaño del ícono */
-  color: #adb5bd; /* Color grisáceo */
+  color: #E74C3C; /* Color grisáceo */
   transition: color 0.2s ease;
   margin-left: 1rem;
 }

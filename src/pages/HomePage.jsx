@@ -1,81 +1,108 @@
-// src/components/HomePage.js
-
+// src/components/HomePage.jsx
+import { useEffect } from 'react';
 import React, { useState } from 'react';
 import Header from './Header';
 import Footer from './Footer';
-import '../styles/homePage.css'; // Asegúrate de crear y enlazar este archivo
-import { useAuth } from '../context/AuthContext'; // ⛔ ¡IMPORTANTE! Importa tu contexto
+import '../styles/homePage.css';
+import { useAuth } from '../context/AuthContext';
 
+import api from '../api/axios.js';
+import { replace } from 'react-router-dom';
 
+const BACKEND_URL = 'http://localhost:3001';
 
-// Datos de ejemplo iniciales. Más adelante, esto vendrá de tu base de datos.
-const peliculasIniciales = [
-  {
-    id: 1,
-    titulo: 'Duna: Parte Dos',
-    descripcion: 'Paul Atreides se une a los Fremen y comienza un viaje espiritual y marcial para convertirse en Muad\'Dib.',
-    anio: 2024,
-    genero: 'Ciencia Ficción',
-    imagen: 'https://m.media-amazon.com/images/M/MV5BNTc0YmQxMjEtODI5MC00NjFiLTlkMWUtOGQ5NjFmYWUyZGJhXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg' // URL de ejemplo
-  },
-  {
-    id: 2,
-    titulo: 'Oppenheimer',
-    descripcion: 'La historia del científico J. Robert Oppenheimer y su papel en el desarrollo de la bomba atómica.',
-    anio: 2023,
-    genero: 'Drama',
-    imagen: 'https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg' // URL de ejemplo
+// Función helper para mostrar imágenes
+const getImageUrl = (path) => {
+  if (!path) return 'https://placehold.co/200x300/222/fff?text=No+Image';
+  if (path.startsWith('http')) {
+    return path;
   }
-];
+  const correctedPath = path.replace(/\\/g, '/').replace(/^\/+/, '');
+  return `${BACKEND_URL}/${correctedPath}`;
+};
+
 
 export const HomePage = () => {
-  // --- ESTADOS DEL COMPONENTE ---
-  const [peliculas, setPeliculas] = useState(peliculasIniciales);
+  const [peliculas, setPeliculas] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [nuevaPelicula, setNuevaPelicula] = useState({
-    titulo: '',
+    nombre: '',
+    duracion: '',
+    lanzamiento: '',
     descripcion: '',
-    anio: '',
-    genero: 'Acción', // Valor por defecto
     imagen: null,
+    CATEGORIA_id: 1,
   });
 
-  const { isAuthenticated, user } = useAuth();
+  useEffect(() => {
+    // Definimos una función 'async' adentro
+    const cargarPeliculas = async () => {
+      try {
+        const res = await api.get('/peliculas');
 
-  // --- MANEJADORES DE EVENTOS ---
+        setPeliculas(res.data);
+      } catch (error) {
+        console.error("Error al cargar las películas:", error);
+      }
+    };
 
-  // Maneja los cambios en los inputs del formulario (texto, año, genero)
+    cargarPeliculas();
+  }, []);
+
+  const { user } = useAuth();
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNuevaPelicula({ ...nuevaPelicula, [name]: value });
   };
 
-  // Maneja el cambio en el input de la imagen
+  // Guarda el *archivo* seleccionado en el estado
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
-      // Creamos una URL temporal para previsualizar la imagen
-      const file = e.target.files[0];
-      setNuevaPelicula({ ...nuevaPelicula, imagen: URL.createObjectURL(file) });
+      setNuevaPelicula({ ...nuevaPelicula, imagen: e.target.files[0] });
     }
   };
 
-  // Maneja el envío del formulario
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Aquí, más adelante, llamarías a tu API para guardar en la BD.
-    // Por ahora, solo actualizamos el estado local.
-    setPeliculas([...peliculas, { id: Date.now(), ...nuevaPelicula }]);
-    
-    // Cerramos el modal y reseteamos el formulario
-    setIsModalOpen(false);
-    setNuevaPelicula({
-      titulo: '',
-      descripcion: '',
-      anio: '',
-      genero: 'Acción',
-      imagen: null,
-    });
+
+    // 1. Validar que se haya seleccionado una imagen
+    if (!nuevaPelicula.imagen) {
+      alert("Por favor, selecciona una imagen.");
+      return;
+    }
+
+    // 2. Crear el FormData
+    const formData = new FormData();
+    formData.append('nombre', nuevaPelicula.nombre);
+    formData.append('duracion', nuevaPelicula.duracion);
+    formData.append('lanzamiento', nuevaPelicula.lanzamiento);
+    formData.append('descripcion', nuevaPelicula.descripcion);
+    formData.append('CATEGORIA_id', nuevaPelicula.CATEGORIA_id);
+    formData.append('imagen', nuevaPelicula.imagen);
+
+    try {
+      // 3. Usar 'api' (con cookies) y la ruta '/agregarPelicula'
+      const res = await api.post('/agregarPelicula', formData);
+
+      // 4. ¡Éxito! Añade la nueva película (res.data) a la lista
+      setPeliculas([...peliculas, res.data]);
+      setIsModalOpen(false); // Cierra el modal
+
+      // 5. Resetea el formulario
+      setNuevaPelicula({
+        nombre: '', duracion: '', lanzamiento: '', descripcion: '', CATEGORIA_id: 1, imagen: null
+      });
+
+    } catch (error) {
+      console.error("Error al subir la película:", error.response?.data?.message || error.message);
+      alert(`Error al subir la película: ${error.response?.data?.message || 'Revisa la consola'}`);
+    }
   };
+
+
+
 
   return (
     <div className='app-container'>
@@ -84,7 +111,7 @@ export const HomePage = () => {
       <main className='main-content'>
         <div className='cartelera-header'>
           <h2>Cartelera</h2>
-          {/* --- BOTÓN SOLO PARA ADMINS --- */}
+          {/* El botón de admin usa el 'rol' del 'user' del contexto */}
           {user?.rol === 'admin' && (
             <button className='btn-agregar' onClick={() => setIsModalOpen(true)}>
               + Agregar Película
@@ -92,44 +119,46 @@ export const HomePage = () => {
           )}
         </div>
 
-        {/* --- CONTENEDOR DE LA CARTELERA --- */}
         <div className='cartelera-grid'>
           {peliculas.map((pelicula) => (
             <div key={pelicula.id} className='pelicula-card'>
-              <img src={pelicula.imagen} alt={pelicula.titulo} />
+              <img src={getImageUrl(pelicula.imagen)} alt={pelicula.nombre} />
               <div className='pelicula-info'>
-                <h3>{pelicula.titulo}</h3>
-                <p>{pelicula.genero} - {pelicula.anio}</p>
+                <h3>{pelicula.nombre}</h3>
+                {/* Mostramos solo el año (ej: 2024) */}
+                <p>{pelicula.duracion} - {pelicula.lanzamiento.split('-')[0]}</p>
               </div>
             </div>
           ))}
         </div>
       </main>
 
-      {/* --- MODAL PARA AGREGAR PELÍCULA (solo se muestra si isModalOpen es true) --- */}
       {isModalOpen && (
         <div className='modal-overlay'>
           <div className='modal-content'>
             <form onSubmit={handleSubmit}>
               <h2>Agregar Nueva Película</h2>
-              <button className='modal-close' onClick={() => setIsModalOpen(false)}>X</button>
-              
-              <input type="text" name="titulo" placeholder="Título" value={nuevaPelicula.titulo} onChange={handleInputChange} required />
-              <textarea name="descripcion" placeholder="Descripción" value={nuevaPelicula.descripcion} onChange={handleInputChange} required />
-              <input type="number" name="anio" placeholder="Año de lanzamiento" value={nuevaPelicula.anio} onChange={handleInputChange} required />
-              
-              <select name="genero" value={nuevaPelicula.genero} onChange={handleInputChange}>
-                <option value="Acción">Acción</option>
-                <option value="Comedia">Comedia</option>
-                <option value="Drama">Drama</option>
-                <option value="Ciencia Ficción">Ciencia Ficción</option>
-                <option value="Terror">Terror</option>
-                <option value="Infantil">Infantil</option>
-              </select>
-              
-              <label htmlFor="imagen">Imagen de Portada:</label>
-              <input type="file" name="imagen" accept="image/*" onChange={handleImageChange} required />
-              
+              <button type="button" className='modal-close' onClick={() => setIsModalOpen(false)}>X</button>
+
+              <label htmlFor="nombre">Nombre</label>
+              <input type="text" id="nombre" name="nombre" placeholder="Nombre de la Película" value={nuevaPelicula.nombre} onChange={handleInputChange} required />
+
+              <label htmlFor="descripcion">Descripción</label>
+              <textarea id="descripcion" name="descripcion" placeholder="Descripción" value={nuevaPelicula.descripcion} onChange={handleInputChange} required />
+
+              <label htmlFor="duracion">Duración</label>
+              <input type="text" id="duracion" name="duracion" placeholder="Ej: 2h 30m" value={nuevaPelicula.duracion} onChange={handleInputChange} required />
+
+              <label htmlFor="lanzamiento">Fecha de Lanzamiento</label>
+              <input type="date" id="lanzamiento" name="lanzamiento" value={nuevaPelicula.lanzamiento} onChange={handleInputChange} required />
+
+              <label htmlFor="categoria">ID de Categoría</label>
+              <input type="number" id="categoria" name="CATEGORIA_id" value={nuevaPelicula.CATEGORIA_id} onChange={handleInputChange} required />
+              {/* (En el futuro, podrías cambiar esto por un <select> de categorías) */}
+
+              <label htmlFor="imagen">Imagen de Portada</label>
+              <input type="file" id="imagen" name="imagen" accept="image/*" onChange={handleImageChange} required />
+
               <button type="submit" className='btn-submit'>Agregar a Cartelera</button>
             </form>
           </div>

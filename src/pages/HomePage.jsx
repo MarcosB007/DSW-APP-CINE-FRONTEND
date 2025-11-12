@@ -25,6 +25,7 @@ const getImageUrl = (path) => {
 export const HomePage = () => {
   const [peliculas, setPeliculas] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [categorias, setCategorias] = useState([]);
 
   const [nuevaPelicula, setNuevaPelicula] = useState({
     nombre: '',
@@ -34,6 +35,21 @@ export const HomePage = () => {
     imagen: null,
     CATEGORIA_id: 1,
   });
+
+  useEffect(() => {
+    // Definimos una función 'async' adentro
+    const cargarCategorias = async () => {
+      try {
+        const res = await api.get('/categorias');
+
+        setCategorias(res.data);
+      } catch (error) {
+        console.error("Error al cargar las categorias:", error);
+      }
+    };
+
+    cargarCategorias();
+  }, []);
 
   useEffect(() => {
     // Definimos una función 'async' adentro
@@ -152,8 +168,27 @@ export const HomePage = () => {
               <label htmlFor="lanzamiento">Fecha de Lanzamiento</label>
               <input type="date" id="lanzamiento" name="lanzamiento" value={nuevaPelicula.lanzamiento} onChange={handleInputChange} required />
 
-              <label htmlFor="categoria">ID de Categoría</label>
-              <input type="number" id="categoria" name="CATEGORIA_id" value={nuevaPelicula.CATEGORIA_id} onChange={handleInputChange} required />
+              <label htmlFor="categoria">Categoría</label>
+              <select
+                id="categoria"
+                name="CATEGORIA_id" // ⬅️ Esto actualiza 'nuevaPelicula.CATEGORIA_id'
+                value={nuevaPelicula.CATEGORIA_id} // El valor seleccionado
+                onChange={handleInputChange} // La misma función que ya tenías
+                required
+              >
+                {/* 1. Una opción deshabilitada para guiar al usuario */}
+                <option value="" disabled>Seleccione una categoría</option>
+
+                {/* 2. Mapeamos el array de categorías del estado */}
+                {categorias.map((categoria) => (
+                  <option key={categoria.id} value={categoria.id}>
+                    {/* 3. Mostramos el NOMBRE al usuario */}
+                    {categoria.nombre}
+                    {/* 4. Pero el VALOR que se guarda es el ID */}
+                  </option>
+                ))}
+              </select>
+              {/* <input type="number" id="categoria" name="CATEGORIA_id" value={nuevaPelicula.CATEGORIA_id} onChange={handleInputChange} required /> */}
               {/* (En el futuro, podrías cambiar esto por un <select> de categorías) */}
 
               <label htmlFor="imagen">Imagen de Portada</label>

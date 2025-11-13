@@ -2,6 +2,7 @@ import {BrowserRouter, Routes, Route} from "react-router-dom"
 import { HomePage } from "../pages/HomePage.jsx"
 import LoginPage from "../pages/LoginPage.jsx"
 import RegisterPage from "../pages/RegisterPage.jsx"
+import { PeliculasPage } from "../pages/PeliculasPage.jsx"
 import { AuthProvider, useAuth } from "../context/AuthContext.jsx";
 
 function AppRouter() {
@@ -23,6 +24,7 @@ function AppLR() {
                     <Route path="/login" element={<LoginPage/>}/>
                     <Route path="/register" element={<RegisterPage/>}/>
                     <Route path="/home" element={<HomePage/>}/>
+                    <Route path="/peliculas" element={<PeliculasPage/>}/>
                     <Route path="/" element={<HomePage/>}/>
 
 

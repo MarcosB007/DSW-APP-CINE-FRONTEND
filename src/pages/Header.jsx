@@ -65,7 +65,7 @@ function Header() {
           {/* 3a. Enlaces de Navegación (Izquierda) */}
           <Nav className="me-auto">
             <Nav.Link as={Link} to="/" href="#home">Inicio</Nav.Link>
-            <Nav.Link href="#peliculas">Películas</Nav.Link>
+            <Nav.Link as={Link} to="/peliculas" href="#peliculas">Películas</Nav.Link>
             <Nav.Link href="#series">Series</Nav.Link>
 
             <NavDropdown title="Géneros" id="basic-nav-dropdown">

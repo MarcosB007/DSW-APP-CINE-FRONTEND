@@ -21,7 +21,7 @@
 
 /* Estilo para los enlaces de navegación */
 .navbar-nav .nav-link {
-  font-size: 1rem;
+  font-size: 20px;
   font-weight: 500;
   color: #adb5bd !important;
   transition: color 0.2s ease-in-out;
@@ -107,4 +107,10 @@
     margin-left: 0;
     margin-top: 0.5rem;
   }
+}
+
+.logo-principal {
+  width: 100px;
+  height: 60px;
+  margin-right: 1rem;
 }

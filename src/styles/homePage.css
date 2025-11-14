@@ -1,14 +1,9 @@
 .imgcine {
   width: 100%;
-  height: auto; /* ⬅️ CAMBIO: 'auto' mantiene la proporción */
-  display: block; /* Opcional, pero buena práctica */
+  height: auto;
+  display: block; 
 }
 
-/* Opcional: Si quieres que el contenedor tenga un alto
-  (ej. el 80% de la altura de la pantalla)
-*/
 .container {
   width: 100%;
-  /* height: 80vh; */ /* (Descomenta esto si quieres un alto fijo) */
-  /* object-fit: cover; */ /* (Y usa esto en .imgcine si fijas el alto) */
 }

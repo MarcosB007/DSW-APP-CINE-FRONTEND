@@ -13,6 +13,7 @@ import '../styles/header.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import swal from 'sweetalert2';
+import Logo from '../../public/images/logoCineStar.png';
 
 function Header() {
 
@@ -52,8 +53,8 @@ function Header() {
     <Navbar bg="dark" data-bs-theme="dark" expand="lg" className="header-custom">
       <Container>
         {/* 1. Logo/Marca */}
-        <Navbar.Brand as={Link} to="/home" href="#home" className="navbar-brand-custom">
-          Mi App Cine
+        <Navbar.Brand as={Link} to="/home" className="navbar-brand-custom">
+          <img src={Logo} alt="Logo de Cinestar" class="logo-principal"></img>
         </Navbar.Brand>
 
         {/* 2. Botón Hamburguesa (móvil) */}
@@ -81,7 +82,7 @@ function Header() {
           <Nav className="ms-auto d-flex align-items-center">
 
             {/* Barra de Búsqueda */}
-            <Form className="d-flex header-search">
+            {/* <Form className="d-flex header-search">
               <FormControl
                 type="search"
                 placeholder="Buscar..."
@@ -89,7 +90,7 @@ function Header() {
                 aria-label="Buscar"
               />
               <Button variant="outline-primary"><FaSearch /></Button>
-            </Form>
+            </Form> */}
 
             {/* Lógica de Autenticación */}
             {isAuthenticated ? (

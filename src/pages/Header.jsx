@@ -54,7 +54,7 @@ function Header() {
       <Container>
         {/* 1. Logo/Marca */}
         <Navbar.Brand as={Link} to="/home" className="navbar-brand-custom">
-          <img src={Logo} alt="Logo de Cinestar" class="logo-principal"></img>
+          <img src={Logo} alt="Logo de Cinestar" className="logo-principal"></img>
         </Navbar.Brand>
 
         {/* 2. Botón Hamburguesa (móvil) */}
@@ -67,15 +67,15 @@ function Header() {
           <Nav className="me-auto">
             <Nav.Link as={Link} to="/" href="#home">Inicio</Nav.Link>
             <Nav.Link as={Link} to="/peliculas" href="#peliculas">Películas</Nav.Link>
-            <Nav.Link href="#series">Series</Nav.Link>
+            {/* <Nav.Link href="#series">Series</Nav.Link> */}
 
-            <NavDropdown title="Géneros" id="basic-nav-dropdown">
+            {/* <NavDropdown title="Géneros" id="basic-nav-dropdown">
               <NavDropdown.Item href="#genero-accion">Acción</NavDropdown.Item>
               <NavDropdown.Item href="#genero-comedia">Comedia</NavDropdown.Item>
               <NavDropdown.Item href="#genero-drama">Drama</NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item href="#genero-todos">Ver Todos</NavDropdown.Item>
-            </NavDropdown>
+            </NavDropdown> */}
           </Nav>
 
           {/* 3b. Búsqueda y Autenticación (Derecha) */}

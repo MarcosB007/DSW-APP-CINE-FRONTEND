@@ -8,17 +8,18 @@ import { useAuth } from '../context/AuthContext';
 
 import api from '../api/axios.js';
 import { replace } from 'react-router-dom';
+import { NavDropdown } from 'react-bootstrap';
 
 const BACKEND_URL = 'http://localhost:3001';
 
 // Función helper para mostrar imágenes
 const getImageUrl = (path) => {
-  if (!path) return 'https://placehold.co/200x300/222/fff?text=No+Image';
-  if (path.startsWith('http')) {
-    return path;
-  }
-  const correctedPath = path.replace(/\\/g, '/').replace(/^\/+/, '');
-  return `${BACKEND_URL}/${correctedPath}`;
+    if (!path) return 'https://placehold.co/200x300/222/fff?text=No+Image';
+    if (path.startsWith('http')) {
+        return path;
+    }
+    const correctedPath = path.replace(/\\/g, '/').replace(/^\/+/, '');
+    return `${BACKEND_URL}/${correctedPath}`;
 };
 
 
@@ -26,7 +27,7 @@ export function PeliculasPage() {
     const [peliculas, setPeliculas] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [categorias, setCategorias] = useState([]);
-
+    const [categoriaFiltro, setCategoriaFiltro] = useState('todos');
     const [nuevaPelicula, setNuevaPelicula] = useState({
         nombre: '',
         duracion: '',
@@ -118,7 +119,29 @@ export function PeliculasPage() {
         }
     };
 
+    const handleFiltrarCategoria = async (categoriaKey) => {
+        // 1. Actualiza el estado del filtro
+        setCategoriaFiltro(categoriaKey);
 
+        // 2. Aquí va tu lógica para buscar las películas
+        console.log(`Buscando películas de la categoría: ${categoriaKey}`);
+
+        try {
+            let res
+            if (categoriaKey === 'todos') {
+                res = await api.get('/peliculas');
+            } else {
+                res = await api.get('/peliculasPorCategoria', {
+                    params: {
+                        CATEGORIA_id: categoriaKey
+                    }
+                });
+            }
+            setPeliculas(res.data);
+        } catch (error) {
+            console.error("Error al cargar las películas:", error);
+        }
+    };
 
 
     return (
@@ -128,13 +151,37 @@ export function PeliculasPage() {
             <main className='main-content'>
                 <div className='cartelera-header'>
                     <h2>Cartelera</h2>
-                    {/* El botón de admin usa el 'rol' del 'user' del contexto */}
+
+
+                    <NavDropdown
+                        title="Géneros"
+                        id="basic-nav-dropdown"
+                        className='categorias'
+                        onSelect={handleFiltrarCategoria} // <-- ¡AQUÍ! Llama a tu función
+                    >
+                        {/* Opción para ver todas */}
+                        <NavDropdown.Item eventKey="todos">Ver Todos</NavDropdown.Item>
+                        <NavDropdown.Divider />
+
+                        {/* Mapeamos el mismo array de categorías del modal */}
+                        {categorias.map((categoria) => (
+                            <NavDropdown.Item
+                                key={categoria.id}
+                                eventKey={categoria.id}
+                            >
+                                {categoria.nombre}
+                            </NavDropdown.Item>
+                        ))}
+                    </NavDropdown>
+
                     {user?.rol === 'admin' && (
                         <button className='btn-agregar' onClick={() => setIsModalOpen(true)}>
                             + Agregar Película
                         </button>
                     )}
                 </div>
+
+
 
                 <div className='cartelera-grid'>
                     {peliculas.map((pelicula) => (
@@ -172,9 +219,9 @@ export function PeliculasPage() {
                             <label htmlFor="categoria">Categoría</label>
                             <select
                                 id="categoria"
-                                name="CATEGORIA_id" // ⬅️ Esto actualiza 'nuevaPelicula.CATEGORIA_id'
-                                value={nuevaPelicula.CATEGORIA_id} // El valor seleccionado
-                                onChange={handleInputChange} // La misma función que ya tenías
+                                name="CATEGORIA_id"
+                                value={nuevaPelicula.CATEGORIA_id}
+                                onChange={handleInputChange}
                                 required
                             >
                                 {/* 1. Una opción deshabilitada para guiar al usuario */}
@@ -189,8 +236,6 @@ export function PeliculasPage() {
                                     </option>
                                 ))}
                             </select>
-                            {/* <input type="number" id="categoria" name="CATEGORIA_id" value={nuevaPelicula.CATEGORIA_id} onChange={handleInputChange} required /> */}
-                            {/* (En el futuro, podrías cambiar esto por un <select> de categorías) */}
 
                             <label htmlFor="imagen">Imagen de Portada</label>
                             <input type="file" id="imagen" name="imagen" accept="image/*" onChange={handleImageChange} required />

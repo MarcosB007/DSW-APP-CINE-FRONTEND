@@ -1,0 +1,120 @@
+/* --- CONTENEDOR PRINCIPAL --- */
+.admin-container {
+  background-color: #1a1d20; /* Un poco más oscuro que el fondo general para resaltar */
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.admin-title {
+  font-family: 'Arial', sans-serif;
+  letter-spacing: 0.5px;
+  color: #f8f9fa;
+}
+
+/* --- TABLA PERSONALIZADA --- */
+.table-custom {
+  background-color: #212529;
+  border-collapse: separate; 
+  border-spacing: 0;
+  border-radius: 8px; /* Bordes redondeados en la tabla */
+  overflow: hidden;
+}
+
+.table-custom thead {
+  background-color: #0d6efd; /* O el color de tu marca */
+  color: white;
+}
+
+.table-custom thead th {
+  border: none;
+  padding: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+}
+
+.table-custom tbody td {
+  border-bottom: 1px solid #373b3e;
+  padding: 1rem;
+  vertical-align: middle;
+  color: black;
+}
+
+/* Efecto Hover en las filas */
+.table-custom tbody tr:hover {
+  background-color: #2c3034 !important;
+  transition: background-color 0.3s ease;
+}
+
+/* --- BOTONES --- */
+.btn-add {
+  background-color: #198754; /* Verde éxito */
+  border: none;
+  padding: 10px 20px;
+  font-weight: bold;
+  transition: transform 0.2s;
+}
+
+.btn-add:hover {
+  background-color: #157347;
+  transform: scale(1.05); /* Pequeño efecto de zoom */
+}
+
+/* --- MODAL & FORMULARIOS DARK --- */
+/* Fondo oscuro detrás del modal */
+.modal-backdrop-custom {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85); /* Más oscuro para enfocar la atención */
+  z-index: 1050;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Animación de entrada */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Inputs oscuros personalizados (mejor que el default de bootstrap) */
+.form-control-dark {
+  background-color: #2c3034;
+  border: 1px solid #495057;
+  color: #fff;
+}
+
+.form-control-dark:focus {
+  background-color: #343a40;
+  color: #fff;
+  border-color: #0d6efd; /* Color de acento al escribir */
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Estilo para el placeholder de los inputs */
+.form-control-dark::placeholder {
+  color: #adb5bd;
+  opacity: 0.6;
+}
+
+/* Ajuste para los selectores (flechita) */
+.form-select-dark {
+  background-color: #2c3034;
+  border: 1px solid #495057;
+  color: #fff;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+}
+
+.form-select-dark:focus {
+  background-color: #343a40;
+  color: #fff;
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}

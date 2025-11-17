@@ -1,28 +1,26 @@
-/* src/assets/styles/Footer.css */
-
 .footer-custom {
-  background-color: #212529; /* Un tono oscuro para el fondo */
-  color: #f8f9fa; /* Color de texto claro */
-  padding: 3rem 0; /* Espaciado interno */
-  font-family: 'Arial', sans-serif; /* Fuente general */
+  background-color: #212529;
+  color: #f8f9fa; 
+  padding: 3rem 0; 
+  font-family: 'Arial', sans-serif;
 }
 
 .footer-logo {
   font-size: 1.8rem;
   font-weight: bold;
-  color: #ffffff; /* Color del logo */
+  color: #ffffff; 
   margin-bottom: 0.8rem;
 }
 
 .footer-text {
   font-size: 0.9rem;
-  color: #adb5bd; /* Color de texto secundario */
+  color: #adb5bd; 
 }
 
 .footer-title {
   font-size: 1.2rem;
   font-weight: bold;
-  color: #ffffff; /* Color de los títulos de sección */
+  color: #ffffff; 
   margin-bottom: 1.5rem;
 }
 

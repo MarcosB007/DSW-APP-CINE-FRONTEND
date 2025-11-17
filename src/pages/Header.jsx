@@ -67,6 +67,9 @@ function Header() {
           <Nav className="me-auto">
             <Nav.Link as={Link} to="/" href="#home">Inicio</Nav.Link>
             <Nav.Link as={Link} to="/peliculas" href="#peliculas">Películas</Nav.Link>
+            {user?.rol === 'admin' && (
+              <Nav.Link as={Link} to="/administracion" href="#admin">Administracion</Nav.Link>
+            )}
             {/* <Nav.Link href="#series">Series</Nav.Link> */}
 
             {/* <NavDropdown title="Géneros" id="basic-nav-dropdown">

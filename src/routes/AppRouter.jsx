@@ -4,6 +4,7 @@ import LoginPage from "../pages/LoginPage.jsx"
 import RegisterPage from "../pages/RegisterPage.jsx"
 import { PeliculasPage } from "../pages/PeliculasPage.jsx"
 import { AuthProvider, useAuth } from "../context/AuthContext.jsx";
+import { AdministracionPage } from "../pages/AdministracionPage.jsx"
 
 function AppRouter() {
   return (
@@ -25,8 +26,8 @@ function AppLR() {
                     <Route path="/register" element={<RegisterPage/>}/>
                     <Route path="/home" element={<HomePage/>}/>
                     <Route path="/peliculas" element={<PeliculasPage/>}/>
+                    <Route path="/administracion" element={<AdministracionPage/>}/>
                     <Route path="/" element={<HomePage/>}/>
-
 
                 </Routes>
 

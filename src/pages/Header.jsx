@@ -51,7 +51,7 @@ function Header() {
   return (
 
     <Navbar bg="dark" data-bs-theme="dark" expand="lg" className="header-custom">
-      <Container>
+      <Container fluid className='px-md-5 px-3'>
         {/* 1. Logo/Marca */}
         <Navbar.Brand as={Link} to="/home" className="navbar-brand-custom">
           <img src={Logo} alt="Logo de Cinestar" className="logo-principal"></img>

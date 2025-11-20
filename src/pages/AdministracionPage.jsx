@@ -46,7 +46,7 @@ export const AdministracionPage = () => {
 
         const cargarFunciones = async () => {
             try {
-                const res = await api.get('/getFunciones');
+                const res = await api.get('/getFuncionesForAdmin');
                 setFunciones(res.data);
             } catch (error) {
                 console.error("Error al cargar las funciones:", error);

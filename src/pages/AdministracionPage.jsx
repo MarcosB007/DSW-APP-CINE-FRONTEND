@@ -1,39 +1,63 @@
-import t, { useState } from 'react'
+import t, { useEffect, useState } from 'react'
 import Header from './Header'
 import Footer from './Footer'
+import api from '../api/axios.js';
 import '../styles/administracionPage.css'
 
-
-const PELICULAS_MOCK = [
-    { id: 1, titulo: "Avatar: El camino del agua" },
-    { id: 2, titulo: "El Gato con Botas" },
-    { id: 3, titulo: "Oppenheimer" },
-    { id: 4, titulo: "Barbie" }
-];
-
-const SALAS_MOCK = [
-    { id: 1, nombre: "Sala 1", capacidad: 50 },
-    { id: 2, nombre: "Sala IMAX", capacidad: 120 },
-    { id: 3, nombre: "Sala VIP", capacidad: 30 }
-];
-
 export const AdministracionPage = () => {
+
+    const [PELICULAS_MOCK, setPELICULAS_MOCK] = useState([]);
+    const [SALAS_MOCK, setSALAS_MOCK] = useState([]);
 
     const [mostrarModal, setMostrarModal] = useState(false);
 
     // Estado para la lista de funciones (inicialmente vacía o con datos de prueba)
-    const [funciones, setFunciones] = useState([
-        { id: 1, pelicula: "Avatar: El camino del agua", sala: "Sala IMAX", fecha: "2025-11-18T18:00", precio: 5000 },
-        { id: 2, pelicula: "Avatar: El camino del agua", sala: "Sala IMAX", fecha: "2025-11-18T18:00", precio: 5000 }
-    ]);
+    const [funciones, setFunciones] = useState([]);
 
     // Estado para el formulario
     const [nuevaFuncion, setNuevaFuncion] = useState({
-        peliculaId: '',
-        salaId: '',
+        PELICULA_id: '',
+        SALA_id: '',
         fecha: '',
         precio: ''
     });
+
+    // FUNCION PARA TRAER LAS PELICULAS y SALAS
+    useEffect(() => {
+        const cargarPeliculasySalas = async () => {
+
+            try {
+                const res = await api.get('/peliculas');
+
+                setPELICULAS_MOCK(res.data);
+            } catch (error) {
+                console.error("Error al cargar las películas:", error);
+            }
+        };
+
+        const cargarSalas = async () => {
+            try {
+                const res = await api.get('/getSalas');
+                setSALAS_MOCK(res.data);
+            } catch (error) {
+                console.error("Error al cargar las salas:", error);
+            }
+        }
+
+        const cargarFunciones = async () => {
+            try {
+                const res = await api.get('/getFunciones');
+                setFunciones(res.data);
+            } catch (error) {
+                console.error("Error al cargar las funciones:", error);
+            }
+        };
+
+        cargarPeliculasySalas();
+        cargarFunciones();
+        cargarSalas();
+    }, [])
+
 
     // Manejar cambios en los inputs del formulario
     const handleInputChange = (e) => {
@@ -44,24 +68,54 @@ export const AdministracionPage = () => {
     };
 
     // Guardar la función (Simulación)
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Buscamos los nombres basados en los IDs seleccionados para mostrar en la tabla
-        const peliNombre = PELICULAS_MOCK.find(p => p.id === parseInt(nuevaFuncion.peliculaId))?.titulo || "Desconocida";
-        const salaNombre = SALAS_MOCK.find(s => s.id === parseInt(nuevaFuncion.salaId))?.nombre || "Desconocida";
+        if (!nuevaFuncion.PELICULA_id || !nuevaFuncion.SALA_id || !nuevaFuncion.fecha || !nuevaFuncion.precio) {
+            alert("Completa todos los campos");
+            return;
+        }
 
-        const funcionAGuardar = {
-            id: Date.now(), // ID temporal único
-            pelicula: peliNombre,
-            sala: salaNombre,
-            fecha: nuevaFuncion.fecha,
-            precio: nuevaFuncion.precio
-        };
+        try {
+            // 1. Preparamos los datos
+            const [fechaSola, horaSola] = nuevaFuncion.fecha.split('T');
 
-        setFunciones([...funciones, funcionAGuardar]);
-        setMostrarModal(false); // Cerrar modal
-        setNuevaFuncion({ peliculaId: '', salaId: '', fecha: '', precio: '' }); // Limpiar form
+            const datosParaEnviar = {
+                PELICULA_id: parseInt(nuevaFuncion.PELICULA_id),
+                SALA_id: parseInt(nuevaFuncion.SALA_id),
+                fecha: fechaSola,
+                hora: horaSola,
+                precio: parseFloat(nuevaFuncion.precio) // <--- Enviamos el precio aquí mismo
+            };
+
+            // 2. Enviamos TODO en una sola petición a un nuevo endpoint
+            // Nota: Asegúrate de crear esta ruta en tu backend
+            const res = await api.post('/agregarFuncionEntrada', datosParaEnviar);
+
+            // El backend debería devolver el ID de la función creada
+            const idNuevaFuncion = res.data.id;
+
+            // 3. Actualizamos la tabla visualmente (Igual que antes)
+            const peliNombre = PELICULAS_MOCK.find(p => p.id === parseInt(nuevaFuncion.PELICULA_id))?.nombre || "Desconocida";
+            const salaNombre = SALAS_MOCK.find(s => s.id === parseInt(nuevaFuncion.SALA_id))?.nombre || "Desconocida";
+
+            const funcionParaTabla = {
+                id: idNuevaFuncion,
+                pelicula: peliNombre,
+                sala: salaNombre,
+                fecha: nuevaFuncion.fecha,
+                precio: nuevaFuncion.precio
+            };
+
+            setFunciones([...funciones, funcionParaTabla]);
+            setMostrarModal(false);
+            setNuevaFuncion({ PELICULA_id: '', SALA_id: '', fecha: '', precio: '' });
+            alert("¡Función y precio creados correctamente!");
+
+        } catch (error) {
+            console.error("Error:", error);
+            alert("Error al crear la función. No se guardó nada.");
+        }
     };
 
     // Eliminar función
@@ -150,14 +204,14 @@ export const AdministracionPage = () => {
                                             <label className="form-label">Película</label>
                                             <select
                                                 className="form-select form-select-dark"
-                                                name="peliculaId"
+                                                name="PELICULA_id"
                                                 required
-                                                value={nuevaFuncion.peliculaId}
+                                                value={nuevaFuncion.PELICULA_id}
                                                 onChange={handleInputChange}
                                             >
                                                 <option value="">Seleccione una película...</option>
                                                 {PELICULAS_MOCK.map(p => (
-                                                    <option key={p.id} value={p.id}>{p.titulo}</option>
+                                                    <option key={p.id} value={p.id}>{p.nombre}</option>
                                                 ))}
                                             </select>
                                         </div>
@@ -167,9 +221,9 @@ export const AdministracionPage = () => {
                                             <label className="form-label">Sala y Capacidad</label>
                                             <select
                                                 className="form-select form-select-dark"
-                                                name="salaId"
+                                                name="SALA_id"
                                                 required
-                                                value={nuevaFuncion.salaId}
+                                                value={nuevaFuncion.SALA_id}
                                                 onChange={handleInputChange}
                                             >
                                                 <option value="">Seleccione una sala...</option>

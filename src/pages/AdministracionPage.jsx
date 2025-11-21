@@ -22,6 +22,23 @@ export const AdministracionPage = () => {
         precio: ''
     });
 
+    // BAJA LOGICA DE UNA FUNCION
+    const handleEliminarFuncion = async (id) => {
+
+        //PONER UNA ALERTA DE CONFIRMACION
+        try {
+            await api.put('/eliminarFuncion', null, {
+                params: { id: id }
+            });
+
+            //PONER UNA ALERTA DE QUE SE ELIMINÓ CORRECTAMENTE
+            setFunciones(listaActual => listaActual.filter(funcion => funcion.id !== id));
+        } catch (error) {
+            console.error("Error:", error);
+            alert("Error al eliminar la función.");
+        }
+    }
+
     // FUNCION PARA TRAER LAS PELICULAS y SALAS
     useEffect(() => {
         const cargarPeliculasySalas = async () => {
@@ -118,26 +135,7 @@ export const AdministracionPage = () => {
         }
     };
 
-    // Eliminar función
-    const handleEliminar = (id) => {
-        setFunciones(funciones.filter(f => f.id !== id));
-    };
 
-    // BAJA LOGICA DE UNA FUNCION
-    const handleEliminarFuncion = async (id) => {
-
-        //PONER UNA ALERTA DE CONFIRMACION
-        try {
-            await api.put('/eliminarFuncion', null, {
-                params: { id: id }
-            });
-
-            //PONER UNA ALERTA DE QUE SE ELIMINÓ CORRECTAMENTE
-        } catch (error) {
-            console.error("Error:", error);
-            alert("Error al eliminar la función.");
-        }
-    }
 
     return (
 

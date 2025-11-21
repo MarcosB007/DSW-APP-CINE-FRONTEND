@@ -123,6 +123,22 @@ export const AdministracionPage = () => {
         setFunciones(funciones.filter(f => f.id !== id));
     };
 
+    // BAJA LOGICA DE UNA FUNCION
+    const handleEliminarFuncion = async (id) => {
+
+        //PONER UNA ALERTA DE CONFIRMACION
+        try {
+            await api.put('/eliminarFuncion', null, {
+                params: { id: id }
+            });
+
+            //PONER UNA ALERTA DE QUE SE ELIMINÓ CORRECTAMENTE
+        } catch (error) {
+            console.error("Error:", error);
+            alert("Error al eliminar la función.");
+        }
+    }
+
     return (
 
         <div className="d-flex flex-column min-vh-100 mt-5">
@@ -168,7 +184,7 @@ export const AdministracionPage = () => {
                                         <td className="text-end">
                                             <button
                                                 className="btn btn-sm btn-outline-danger"
-                                                onClick={() => handleEliminar(func.id)}
+                                                onClick={() => handleEliminarFuncion(func.id)}
                                             >
                                                 Eliminar
                                             </button>

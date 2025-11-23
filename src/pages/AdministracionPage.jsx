@@ -1,19 +1,49 @@
-import t, { useEffect, useState } from 'react'
+import t, { useEffect, useState, useCallback } from 'react'
 import Header from './Header'
 import Footer from './Footer'
 import api from '../api/axios.js';
 import '../styles/administracionPage.css'
 
-export const AdministracionPage = () => {
+const ModalAlerta = ({ mensaje, mostrar, onClose }) => {
+    // Si no se debe mostrar, no renderiza nada
+    if (!mostrar) return null;
 
+    // useEffect para ocultar el modal después de 2 segundos
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            onClose(); // Llama a la función para ocultar el modal
+        }, 2000); // 2 segundos
+
+        return () => clearTimeout(timer); // Limpieza del timer al desmontar
+    }, [mostrar, onClose]); // Dependencias: se ejecuta cada vez que 'mostrar' cambia a true
+
+    return (
+        <div className="modal-backdrop-custom modal-alerta-success">
+            <div className="modal-dialog modal-dialog-centered modal-sm">
+                <div className="modal-content bg-dark text-white border-secondary">
+                    <div className="modal-body text-center py-5">
+                        <i className="bi bi-check-circle-fill icon-success mb-3"></i> 
+                        <p className="lead fw-bold mb-0">{mensaje}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+
+export const AdministracionPage = () => {
+    
     const [PELICULAS_MOCK, setPELICULAS_MOCK] = useState([]);
     const [SALAS_MOCK, setSALAS_MOCK] = useState([]);
-
     const [mostrarModal, setMostrarModal] = useState(false);
-
+    const [mostrarAlertaExito, setMostrarAlertaExito] = useState(false);
+    const [mensajeAlertaExito, setMensajeAlertaExito] = useState("");
+    
     // Estado para la lista de funciones (inicialmente vacía o con datos de prueba)
     const [funciones, setFunciones] = useState([]);
 
+   
     // Estado para el formulario
     const [nuevaFuncion, setNuevaFuncion] = useState({
         PELICULA_id: '',
@@ -24,20 +54,33 @@ export const AdministracionPage = () => {
 
     // BAJA LOGICA DE UNA FUNCION
     const handleEliminarFuncion = async (id) => {
-
-        //PONER UNA ALERTA DE CONFIRMACION
+       // 1. ALERTA DE CONFIRMACIÓN
+    const confirmar = window.confirm("¿Estás seguro de que quieres ELIMINAR esta función?");
+    if (!confirmar) {
+        return;
+        
+    }
         try {
+            // Llamada al backend (MOCK)
             await api.put('/eliminarFuncion', null, {
-                params: { id: id }
+                params: { id: id}
             });
-
-            //PONER UNA ALERTA DE QUE SE ELIMINÓ CORRECTAMENTE
+            
+            // 2. Eliminar visualmente de la lista
             setFunciones(listaActual => listaActual.filter(funcion => funcion.id !== id));
+            
+            // 3.  ACTIVAR LA ALERTA DE ÉXITO
+            setMensajeAlertaExito("¡Función Eliminada!");  
+            setMostrarAlertaExito(true);
+            
+
         } catch (error) {
-            console.error("Error:", error);
-            alert("Error al eliminar la función.");
+            console.error("Error al eliminar la función:", error);
+            setMensajeAlertaExito("Error al eliminar la función.");
+            setMostrarAlertaExito(true);
         }
     }
+
 
     // FUNCION PARA TRAER LAS PELICULAS y SALAS
     useEffect(() => {
@@ -90,6 +133,7 @@ export const AdministracionPage = () => {
 
         if (!nuevaFuncion.PELICULA_id || !nuevaFuncion.SALA_id || !nuevaFuncion.fecha || !nuevaFuncion.precio) {
             alert("Completa todos los campos");
+            setMostrarAlertaExito(true);
             return;
         }
 
@@ -108,6 +152,7 @@ export const AdministracionPage = () => {
             // 2. Enviamos TODO en una sola petición a un nuevo endpoint
             // Nota: Asegúrate de crear esta ruta en tu backend
             const res = await api.post('/agregarFuncionEntrada', datosParaEnviar);
+            
 
             // El backend debería devolver el ID de la función creada
             const idNuevaFuncion = res.data.id;
@@ -127,11 +172,13 @@ export const AdministracionPage = () => {
             setFunciones([...funciones, funcionParaTabla]);
             setMostrarModal(false);
             setNuevaFuncion({ PELICULA_id: '', SALA_id: '', fecha: '', precio: '' });
-            alert("¡Función y precio creados correctamente!");
+            setMensajeAlertaExito("¡Función Creada Exitosamente!");
+            setMostrarAlertaExito(true);
 
         } catch (error) {
             console.error("Error:", error);
             alert("Error al crear la función. No se guardó nada.");
+            setMostrarAlertaExito(true)
         }
     };
 
@@ -141,7 +188,7 @@ export const AdministracionPage = () => {
 
         <div className="d-flex flex-column min-vh-100 mt-5">
             <Header />
-            <div className="container mt-5 mb-5 text-white">
+            <div className="container text-white flex-grow-1 admin-content-padding">
 
                 {/* --- CABECERA --- */}
                 <div className="d-flex justify-content-between align-items-center mb-4">
@@ -154,7 +201,7 @@ export const AdministracionPage = () => {
                         onClick={() => setMostrarModal(true)}
                     >
                         <i className="bi bi-plus-circle me-2"></i>
-                        + Agregar Función
+                        Agregar Función
                     </button>
                 </div>
 
@@ -182,7 +229,7 @@ export const AdministracionPage = () => {
                                         <td className="text-end">
                                             <button
                                                 className="btn btn-sm btn-outline-danger"
-                                                onClick={() => handleEliminarFuncion(func.id)}
+                                                onClick={() => handlePreEliminar(func.id)}
                                             >
                                                 Eliminar
                                             </button>
@@ -209,7 +256,7 @@ export const AdministracionPage = () => {
                                     <h5 className="modal-title">Nueva Función</h5>
                                     <button type="button" className="btn-close btn-close-white" onClick={() => setMostrarModal(false)}></button>
                                 </div>
-
+                               
                                 <form onSubmit={handleSubmit}>
                                     <div className="modal-body">
 
@@ -285,13 +332,21 @@ export const AdministracionPage = () => {
                                 </form>
                             </div>
                         </div>
+                    
                     </div>
+                    
                 )}
+                    <ModalAlerta 
+                    mensaje={mensajeAlertaExito} 
+                    mostrar={mostrarAlertaExito} 
+                    onClose={() => setMostrarAlertaExito(false)} 
+                    />
+                 
             </div>
             <Footer />
         </div>
 
 
     );
-}
+};
 

@@ -118,3 +118,49 @@
   border-color: #0d6efd;
   box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 }
+/* CLASE PARA AÑADIR UN GRAN ESPACIO VERTICAL AL CONTENIDO ADMIN */
+.admin-content-padding {
+    /* Puedes ajustar el valor de '6rem' (aprox. 96px) al que prefieras. 
+       Esto empujará la tabla mucho más abajo del Header y creará espacio sobre el Footer. */
+    padding-top: 7rem;
+    padding-bottom: 7rem;
+}
+/* --- ICONO Y ESTILO PARA LA ALERTA DE ÉXITO --- */
+
+/* Asegura que el modal de alerta sea un poco más pequeño (opcional) */
+.modal-alerta-success .modal-content {
+    width: 300px; /* Ancho fijo */
+    margin: auto;
+    border-radius: 12px;
+    box-shadow: 0 0 40px rgba(0, 255, 0, 0.1); /* Sutil resplandor verde */
+}
+
+/* Estilo para el icono de check (como en la imagen de ejemplo) */
+.icon-success {
+    font-size: 4rem; /* Icono grande */
+    color: #28a745; /* Verde Bootstrap 'success' */
+    display: block; /* Para centrar */
+    line-height: 1; /* Elimina espacio extra */
+    animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Animación para hacer el icono más dinámico */
+@keyframes bounceIn {
+    0% {
+        transform: scale(0.1);
+        opacity: 0;
+    }
+    60% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* El texto de la alerta */
+.modal-alerta-success .lead {
+    color: #f8f9fa; /* Color de texto claro */
+    font-size: 1.1rem;
+}

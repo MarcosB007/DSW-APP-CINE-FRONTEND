@@ -1,13 +1,8 @@
-
-.container {
-    width: 100%;
-    
-}
-
 /* ------------------------------------------------------------- */
 /* 1. HERO SECTION: Contenedor Principal (Flujo Vertical Limpio) */
 /* ------------------------------------------------------------- */
 .hero-section {
+    flex-grow: 1; 
     /* 1. Imagen de Fondo y Opacidad */
     background-image: url('/images/cine1024.png'); /* Ruta corregida */
     background-size: cover; 
@@ -16,7 +11,7 @@
     
     /* 2. Dimensiones y Posicionamiento */
     width: 100%;
-    height: 80vh; 
+    height: 100vh; 
     position: relative; 
     
     /* 3. FLUJO: Apilar contenido desde arriba y centrar horizontalmente */
@@ -27,6 +22,7 @@
     
     /* Mantenemos un padding superior para separar el contenido del Header */
     padding-top: 100px; 
+    
 }
 
 .hero-section::before {
@@ -51,21 +47,19 @@
 /* ------------------------------------------------------------- */
 .hero-title {
     /* El padding-top en .hero-section ya lo baja. Quitamos cualquier posición absoluta. */
-    margin-bottom: 30px; 
-    
+    margin-bottom: -60px; 
+    margin-top: 70px;
     width: 100%; 
     text-align: center; 
     z-index: 10; 
 
     /* --- ESTILOS VISUALES (Se mantienen) --- */
-    font-family: 'Times New Roman', Georgia, serif; 
+    font-family: 'Times New Roman', Georgia, serif;
     font-size: 4rem; 
     font-weight: 700; 
     letter-spacing: 6px; 
-    color: #FFEBCC; 
-    text-shadow: 
-        1px 1px 3px rgba(143, 37, 37, 0.9), 
-        0 0 10px #e76f3c; 
+    color: #ede9e8; 
+    text-shadow: 1px 1px 3px rgba(143, 37, 37, 0.9), 0 0 10px #e76f3c; 
 }
 .carousel-wrapper {
     width: 90%; /* Ancho que ocupa todo el bloque del carrusel */

@@ -1,14 +1,16 @@
 // src/components/HomePage.jsx
 import { useEffect } from 'react';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Header from './Header';
 import Footer from './Footer';
 import '../styles/peliculaspage.css';
 import { useAuth } from '../context/AuthContext';
+import axios from "axios";
 
 import api from '../api/axios.js';
 import { replace } from 'react-router-dom';
 import { NavDropdown } from 'react-bootstrap';
+import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
 
 const BACKEND_URL = 'http://localhost:3001';
 
@@ -39,17 +41,67 @@ export function PeliculasPage() {
     const [movieToBuy, setMovieToBuy] = useState(null);
     const [funcionesPorPelicula, setFuncionesPorPelicula] = useState([]);
     const [funcionSeleccionada, setFuncionSeleccionada] = useState(null);
+    // Cantidad de entradas
+    const [cantidad, setCantidad] = useState(1);
+
+    useEffect(() => {
+        initMercadoPago('APP_USR-026e37f1-7eb1-4e10-8b13-600adee9d908', {
+            locale: 'es-AR'
+        });
+    }, []);
+
+    const [preferenceId, setPreferenceId] = useState(null);    
+
+    const handleBuy = async () => {
+        const id = await createPreference();
+        if (id) {
+            setPreferenceId(id);
+        }
+    }
 
     const handleCloseModal = () => {
         setMovieToBuy(null);
         setFuncionSeleccionada(null);
         setFuncionesPorPelicula([]);
+        setPreferenceId(null);
+        setCantidad(1);
     };
 
-    // 3. FUNCIÓN PRELIMINAR DE PAGAR (Solo un alert por ahora)
-    const handleIrAPagar = () => {
-        alert(`Redirigiendo al pago de la función ID: ${funcionSeleccionada}`);
-        // Aquí luego pondremos: navigate('/pago', { state: { funcionId: funcionSeleccionada } })
+    const incrementarCantidad = () => {
+        if (cantidad < 10) setCantidad(cantidad + 1);
+    };
+
+    const decrementarCantidad = () => {
+        if (cantidad > 1) setCantidad(cantidad - 1);
+    };
+
+    // 2. BUSCAMOS LA FUNCIÓN ENTERA (Para sacar el precio)
+    const funcionActual = funcionesPorPelicula.find(f => f.id === funcionSeleccionada);
+
+    // Calculamos el total
+    const totalPagar = funcionActual ? funcionActual.precio * cantidad : 0;
+
+    const handleIrAPagar = async () => {
+        try {
+            const funcionActual = funcionesPorPelicula.find(f => f.id === funcionSeleccionada);
+            if (!funcionActual) return;
+
+            const datosPago = {
+                titulo: `Entrada: ${movieToBuy.nombre}`,
+                cantidad: cantidad,
+                precio: funcionActual.precio
+            };
+
+            const res = await api.post('/createPreference', datosPago);
+
+            // GUARDAMOS EL ID EN EL ESTADO
+            if (res.data.preferenceId) {
+                setPreferenceId(res.data.preferenceId);
+            }
+
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     useEffect(() => {
@@ -267,6 +319,29 @@ export function PeliculasPage() {
                                                 <div className="funcion-precio">${funcion.precio}</div>
                                             </div>
                                         ))}
+                                        {funcionSeleccionada && funcionActual && (
+                                            <div className="cantidad-section animate-fade-in">
+                                                <hr className="divider" />
+
+                                                <div className="d-flex justify-content-between align-items-center">
+
+                                                    <div className="contador-wrapper">
+                                                        <span className="text-muted me-3">Cantidad de entradas:</span>
+                                                        <div className="contador-controles">
+                                                            <button className="btn-contador" onClick={decrementarCantidad}>-</button>
+                                                            <span className="numero-cantidad">{cantidad}</span>
+                                                            <button className="btn-contador" onClick={incrementarCantidad}>+</button>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="total-precio">
+                                                        <small>Total a pagar:</small>
+                                                        <div className="precio-gigante">${totalPagar}</div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 ) : (
                                     <div className="text-center py-4 text-muted">
@@ -284,14 +359,25 @@ export function PeliculasPage() {
                                 </small>
 
                                 {/* 5. BOTÓN "IR A PAGAR" (Solo aparece si hay selección) */}
-                                {funcionSeleccionada && (
-                                    <button
-                                        className="btn-pagar animate-fade-in"
-                                        onClick={handleIrAPagar}
-                                    >
-                                        Ir a Pagar &rarr;
-                                    </button>
+
+                                {!preferenceId ? (
+                                    <>
+                                        {funcionSeleccionada && (
+                                            <button className="btn-pagar" onClick={handleIrAPagar}>
+                                                Confirmar Compra
+                                            </button>
+                                        )}
+                                    </>
+                                ) : (
+                                    <div style={{ width: '100%' }}>
+                                        {/* ESTE ES EL COMPONENTE "BRICK" QUE REEMPLAZA AL DIV walletBrick_container */}
+                                        <Wallet
+                                            initialization={{ preferenceId: preferenceId }}
+                                            customization={{ texts: { valueProp: 'smart_option' } }}
+                                        />
+                                    </div>
                                 )}
+
                             </div>
                         </div>
                     </div>

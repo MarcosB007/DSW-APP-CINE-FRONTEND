@@ -68,7 +68,17 @@ function Header() {
             <Nav.Link as={Link} to="/" href="#home">Inicio</Nav.Link>
             <Nav.Link as={Link} to="/peliculas" href="#peliculas">Películas</Nav.Link>
             {user?.rol === 'admin' && (
-              <Nav.Link as={Link} to="/administracion" href="#admin">Administracion</Nav.Link>
+              <NavDropdown title="Administración" id="admin-nav-dropdown">
+            {/* Opción 1: Agregar Función */}
+            <NavDropdown.Item as={Link} to="/administracion">
+              Agregar función
+            </NavDropdown.Item>
+
+            {/* Opción 2: Listar Películas */}
+            <NavDropdown.Item as={Link} to="/admin/listar-peliculas">
+              Listar películas
+            </NavDropdown.Item>
+          </NavDropdown>
             )}
             {/* <Nav.Link href="#series">Series</Nav.Link> */}
 

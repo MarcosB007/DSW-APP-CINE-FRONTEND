@@ -36,6 +36,21 @@ export function PeliculasPage() {
         imagen: null,
         CATEGORIA_id: 1,
     });
+    const [movieToBuy, setMovieToBuy] = useState(null);
+    const [funcionesPorPelicula, setFuncionesPorPelicula] = useState([]);
+    const [funcionSeleccionada, setFuncionSeleccionada] = useState(null);
+
+    const handleCloseModal = () => {
+        setMovieToBuy(null);
+        setFuncionSeleccionada(null);
+        setFuncionesPorPelicula([]);
+    };
+
+    // 3. FUNCIÓN PRELIMINAR DE PAGAR (Solo un alert por ahora)
+    const handleIrAPagar = () => {
+        alert(`Redirigiendo al pago de la función ID: ${funcionSeleccionada}`);
+        // Aquí luego pondremos: navigate('/pago', { state: { funcionId: funcionSeleccionada } })
+    };
 
     useEffect(() => {
         // Definimos una función 'async' adentro
@@ -143,6 +158,27 @@ export function PeliculasPage() {
         }
     };
 
+    const cargarFunciones = async (id) => {
+        try {
+
+            const res = await api.get('/getFuncionPorIdDePelicula', {
+                params: {
+                    PELICULA_id: id
+                }
+            });
+
+            setFuncionesPorPelicula(res.data);
+
+        } catch (error) {
+            console.error("Error al cargar las funciones para esta pelicula:", error);
+        }
+    }
+
+    const handleComprarClick = (pelicula) => {
+        setMovieToBuy(pelicula);
+        cargarFunciones(pelicula.id)
+    }
+
 
     return (
         <div className='app-container'>
@@ -191,10 +227,75 @@ export function PeliculasPage() {
                                 <h3>{pelicula.nombre}</h3>
                                 {/* Mostramos solo el año (ej: 2024) */}
                                 <p>{pelicula.duracion} - {pelicula.lanzamiento.split('-')[0]}</p>
+                                {/* 3. BOTÓN DE COMPRAR */}
+                                <button
+                                    className="btn-comprar"
+                                    onClick={() => handleComprarClick(pelicula)}
+                                >
+                                    Comprar Entrada
+                                </button>
                             </div>
                         </div>
                     ))}
                 </div>
+                {movieToBuy && (
+                    <div className="modal-backdrop-custom">
+                        <div className="modal-content-custom">
+
+                            <div className="modal-header">
+                                <h2 className="text-warning">{movieToBuy.nombre}</h2>
+                                <button className="btn-close-custom" onClick={handleCloseModal}>X</button>
+                            </div>
+
+                            <div className="modal-body">
+                                <h5 className="mb-3">Selecciona una función:</h5>
+
+                                {funcionesPorPelicula.length > 0 ? (
+                                    <div className="funciones-grid">
+                                        {funcionesPorPelicula.map((funcion) => (
+                                            <div
+                                                key={funcion.id}
+                                                // 4. CLASE DINÁMICA: Si es la seleccionada, le ponemos borde amarillo
+                                                className={`funcion-card ${funcionSeleccionada === funcion.id ? 'selected' : ''}`}
+                                                onClick={() => setFuncionSeleccionada(funcion.id)}
+                                            >
+                                                <div className="funcion-hora">{funcion.hora.slice(0, 5)} hs</div>
+                                                <div className="funcion-info">
+                                                    <span className="funcion-fecha">{new Date(funcion.fecha).toLocaleDateString()}</span>
+                                                    <span className="funcion-sala">{funcion.nombre_sala}</span>
+                                                </div>
+                                                <div className="funcion-precio">${funcion.precio}</div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="text-center py-4 text-muted">
+                                        <p>Cargando horarios disponibles...</p>
+                                        {/* O podrías poner: "No hay funciones disponibles para esta película" */}
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="modal-footer d-flex justify-content-between align-items-center">
+
+                                {/* Texto informativo (Opcional) */}
+                                <small className="text-muted">
+                                    {funcionSeleccionada ? 'Función seleccionada.' : 'Elige un horario para continuar.'}
+                                </small>
+
+                                {/* 5. BOTÓN "IR A PAGAR" (Solo aparece si hay selección) */}
+                                {funcionSeleccionada && (
+                                    <button
+                                        className="btn-pagar animate-fade-in"
+                                        onClick={handleIrAPagar}
+                                    >
+                                        Ir a Pagar &rarr;
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                )}
             </main>
 
             {isModalOpen && (

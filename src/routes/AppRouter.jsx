@@ -5,6 +5,7 @@ import RegisterPage from "../pages/RegisterPage.jsx"
 import { PeliculasPage } from "../pages/PeliculasPage.jsx"
 import { AuthProvider, useAuth } from "../context/AuthContext.jsx";
 import { AdministracionPage } from "../pages/AdministracionPage.jsx"
+import ListarPeliculas from "../pages/ListarPeliculas.jsx";
 
 function AppRouter() {
   return (
@@ -27,6 +28,7 @@ function AppLR() {
                     <Route path="/home" element={<HomePage/>}/>
                     <Route path="/peliculas" element={<PeliculasPage/>}/>
                     <Route path="/administracion" element={<AdministracionPage/>}/>
+                    <Route path="/admin/listar-peliculas" element={<ListarPeliculas/>}/>
                     <Route path="/" element={<HomePage/>}/>
 
                 </Routes>

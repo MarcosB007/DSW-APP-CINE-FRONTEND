@@ -197,7 +197,7 @@ export const AdministracionPage = () => {
                         <p className="text-muted">Administra los horarios y precios de las películas.</p>
                     </div>
                     <button
-                        className="btn btn-primary btn-lg"
+                        className="btn btn-lg btn-agregar-funcion"
                         onClick={() => setMostrarModal(true)}
                     >
                         <i className="bi bi-plus-circle me-2"></i>

@@ -22,24 +22,25 @@
 }
 
 .table-custom thead {
-  background-color: #0d6efd; /* O el color de tu marca */
+  background-color: #2e5689; /* O el color de tu marca */
   color: white;
 }
 
 .table-custom thead th {
   border: none;
   padding: 1rem;
-  font-weight: 600;
+  font-weight: bold;
   text-transform: uppercase;
   font-size: 0.85rem;
   letter-spacing: 1px;
+  background-color: #701918;
 }
 
 .table-custom tbody td {
-  border-bottom: 1px solid #373b3e;
+  border-bottom: 1px solid #080a0b;
   padding: 1rem;
   vertical-align: middle;
-  color: black;
+  color: rgb(15, 15, 15)!important;
 }
 
 /* Efecto Hover en las filas */
@@ -108,15 +109,15 @@
 .form-select-dark {
   background-color: #2c3034;
   border: 1px solid #495057;
-  color: #fff;
+  color: #ffffff;
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
 }
 
 .form-select-dark:focus {
   background-color: #343a40;
   color: #fff;
-  border-color: #0d6efd;
-  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  border-color: #1d2229;
+  box-shadow: 0 0 0 0.25rem rgba(71, 31, 247, 0.25);
 }
 /* CLASE PARA AÑADIR UN GRAN ESPACIO VERTICAL AL CONTENIDO ADMIN */
 .admin-content-padding {
@@ -163,4 +164,17 @@
 .modal-alerta-success .lead {
     color: #f8f9fa; /* Color de texto claro */
     font-size: 1.1rem;
+}
+/* --- BOTÓN AGREGAR FUNCIÓN PERSONALIZADO --- */
+.btn-agregar-funcion {
+    background-color: #5e1d0e !important;  /* ¡Importante! Color de fondo */
+    border-color: #5e1d0e !important;      /* Color del borde */
+    color: white !important;               /* Color de la letra */
+    opacity: 1 !important;                 /* Asegura que no sea transparente */
+}
+
+.btn-agregar-funcion:hover {
+    background-color: #d23815 !important; /* Color al pasar el mouse */
+    border-color: #d23815 !important;
+    color: white !important;
 }

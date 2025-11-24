@@ -4,13 +4,14 @@ import React, { useState, useRef } from 'react';
 import Header from './Header';
 import Footer from './Footer';
 import '../styles/peliculaspage.css';
-import { useAuth } from '../context/AuthContext';
 import axios from "axios";
 
 import api from '../api/axios.js';
-import { replace } from 'react-router-dom';
+import { replace, useNavigate } from 'react-router-dom';
 import { NavDropdown } from 'react-bootstrap';
-import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
+import { initMercadoPago } from '@mercadopago/sdk-react';
+import { useAuth } from '../context/AuthContext';
+import Swal from 'sweetalert2';
 
 const BACKEND_URL = 'http://localhost:3001';
 
@@ -26,6 +27,8 @@ const getImageUrl = (path) => {
 
 
 export function PeliculasPage() {
+    const { isAuthenticated, logout, user } = useAuth();
+
     const [peliculas, setPeliculas] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [categorias, setCategorias] = useState([]);
@@ -44,26 +47,18 @@ export function PeliculasPage() {
     // Cantidad de entradas
     const [cantidad, setCantidad] = useState(1);
 
+    const navigate = useNavigate();
+
     useEffect(() => {
         initMercadoPago('APP_USR-026e37f1-7eb1-4e10-8b13-600adee9d908', {
             locale: 'es-AR'
         });
     }, []);
 
-    const [preferenceId, setPreferenceId] = useState(null);    
-
-    const handleBuy = async () => {
-        const id = await createPreference();
-        if (id) {
-            setPreferenceId(id);
-        }
-    }
-
     const handleCloseModal = () => {
         setMovieToBuy(null);
         setFuncionSeleccionada(null);
         setFuncionesPorPelicula([]);
-        setPreferenceId(null);
         setCantidad(1);
     };
 
@@ -92,15 +87,15 @@ export function PeliculasPage() {
                 precio: funcionActual.precio
             };
 
+            // 1. Pedimos la preferencia al backend
             const res = await api.post('/createPreference', datosPago);
 
-            // GUARDAMOS EL ID EN EL ESTADO
-            if (res.data.preferenceId) {
-                setPreferenceId(res.data.preferenceId);
+            if (res.data.init_point) {
+                window.location.href = res.data.init_point;
             }
 
         } catch (error) {
-            console.error(error);
+            console.error("Error al redirigir:", error);
         }
     };
 
@@ -133,8 +128,6 @@ export function PeliculasPage() {
 
         cargarPeliculas();
     }, []);
-
-    const { user } = useAuth();
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -227,8 +220,22 @@ export function PeliculasPage() {
     }
 
     const handleComprarClick = (pelicula) => {
-        setMovieToBuy(pelicula);
-        cargarFunciones(pelicula.id)
+        if (isAuthenticated) {
+            setMovieToBuy(pelicula);
+            cargarFunciones(pelicula.id)
+        } else {
+            Swal.fire({
+                title: "Inicia sesión primero!",
+                timer: 2000, // Espera 2 segundos antes de redirigir
+                icon: "info",
+
+                focusConfirm: false,
+                draggable: true,
+
+            }).then(() => {
+                navigate("/login"); // Navega al home ("/") después de cerrar sesión
+            });
+        }
     }
 
 
@@ -353,29 +360,18 @@ export function PeliculasPage() {
 
                             <div className="modal-footer d-flex justify-content-between align-items-center">
 
-                                {/* Texto informativo (Opcional) */}
                                 <small className="text-muted">
                                     {funcionSeleccionada ? 'Función seleccionada.' : 'Elige un horario para continuar.'}
                                 </small>
 
-                                {/* 5. BOTÓN "IR A PAGAR" (Solo aparece si hay selección) */}
-
-                                {!preferenceId ? (
-                                    <>
-                                        {funcionSeleccionada && (
-                                            <button className="btn-pagar" onClick={handleIrAPagar}>
-                                                Confirmar Compra
-                                            </button>
-                                        )}
-                                    </>
-                                ) : (
-                                    <div style={{ width: '100%' }}>
-                                        {/* ESTE ES EL COMPONENTE "BRICK" QUE REEMPLAZA AL DIV walletBrick_container */}
-                                        <Wallet
-                                            initialization={{ preferenceId: preferenceId }}
-                                            customization={{ texts: { valueProp: 'smart_option' } }}
-                                        />
-                                    </div>
+                                {/* Solo mostramos este botón, que ahora redirige automáticamente */}
+                                {funcionSeleccionada && (
+                                    <button
+                                        className="btn-pagar animate-fade-in"
+                                        onClick={handleIrAPagar}
+                                    >
+                                        Ir a Pagar &rarr;
+                                    </button>
                                 )}
 
                             </div>

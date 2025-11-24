@@ -194,7 +194,6 @@ export const AdministracionPage = () => {
                 <div className="d-flex justify-content-between align-items-center mb-4">
                     <div>
                         <h2 className="fw-bold">Gestión de Cartelera</h2>
-                        <p className="text-muted">Administra los horarios y precios de las películas.</p>
                     </div>
                     <button
                         className="btn btn-lg btn-agregar-funcion"

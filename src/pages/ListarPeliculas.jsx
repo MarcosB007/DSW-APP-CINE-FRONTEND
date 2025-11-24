@@ -9,6 +9,7 @@ function ListarPeliculasPage() {
     // 1. Estados para guardar los datos de la BD
     const [peliculas, setPeliculas] = useState([]);
     const [categorias, setCategorias] = useState([]);
+    const [filtroCategoria, setFiltroCategoria] = useState('');
 
     // 2. Cargar datos cuando se abre la página
     useEffect(() => {
@@ -29,6 +30,24 @@ function ListarPeliculasPage() {
 
         cargarDatos();
     }, []);
+        // --- LÓGICA DE ELIMINAR (BAJA LÓGICA) ---
+    const handleEliminar = async (id) => {
+        // Preguntamos primero
+        if (!window.confirm("¿Seguro que quieres dar de baja esta película?")) return;
+
+        try {
+            // Llamamos a la ruta que creamos recien
+            await api.put(`/eliminarPelicula?id=${id}`);
+            
+            // Actualizamos la tabla visualmente quitando la pelicula borrada
+            setPeliculas(peliculas.filter(p => p.id !== id));
+            alert("Película dada de baja con éxito");
+            
+        } catch (error) {
+            console.error("Error al eliminar:", error);
+            alert("Hubo un error al intentar eliminar.");
+        }
+    };
 
     // 3. Función auxiliar para obtener el nombre de la categoría según el ID
     const getNombreCategoria = (idCategoria) => {
@@ -36,6 +55,10 @@ function ListarPeliculasPage() {
         return categoriaEncontrada ? categoriaEncontrada.nombre : 'Sin Categoría';
     };
 
+    // Si hay algo en 'filtroCategoria', filtramos. Si no, mostramos todas.
+const peliculasFiltradas = filtroCategoria 
+    ? peliculas.filter(p => p.CATEGORIA_id == filtroCategoria)
+    : peliculas;
     return (
         <div className='admin-page-wrapper'>
             <Header />
@@ -44,9 +67,21 @@ function ListarPeliculasPage() {
                 <Container>
                     <div className="admin-header-container">
                         <h2 className="admin-title">Gestión de Películas</h2>
-                        <button className="btn btn-genero">
-                            Filtrar por Género
-                        </button>
+                        <div style={{ width: '200px' }}>
+    <select 
+        className="form-select bg-dark text-white border-secondary"
+        value={filtroCategoria}
+        onChange={(e) => setFiltroCategoria(e.target.value)}
+    >
+        <option value="">Todas las categorías</option>
+        {categorias.map(cat => (
+            <option key={cat.id} value={cat.id}>
+                {cat.nombre}
+            </option>
+        ))}
+    </select>
+</div>
+                        
                     </div>
 
                     <div className="table-responsive rounded shadow-sm">
@@ -62,8 +97,8 @@ function ListarPeliculasPage() {
                             </thead>
                             <tbody>
                                 {/* 4. AQUÍ OCURRE LA MAGIA: Mapeamos los datos reales */}
-                                {peliculas.length > 0 ? (
-                                    peliculas.map((pelicula) => (
+                                {peliculasFiltradas.length > 0 ? (
+                                    peliculasFiltradas.map((pelicula) => (
                                         <tr key={pelicula.id}>
                                             {/* ID (Negrita por CSS anterior) */}
                                             <td>{pelicula.id}</td>
@@ -87,7 +122,9 @@ function ListarPeliculasPage() {
                                                 <button className="btn btn-sm btn-primary me-2">
                                                     Editar
                                                 </button>
-                                                <button className="btn btn-sm btn-danger">
+                                                <button className="btn btn-sm btn-danger"
+                                                onClick={() => handleEliminar(pelicula.id)}
+                                                >
                                                     Eliminar
                                                 </button>
                                             </td>
@@ -95,7 +132,7 @@ function ListarPeliculasPage() {
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan="5" className="text-center py-4">
+                                        <td colSpan="5" className="text-center">
                                             No hay películas cargadas o no se pudo conectar al servidor.
                                         </td>
                                     </tr>

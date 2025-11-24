@@ -229,7 +229,7 @@ export const AdministracionPage = () => {
                                         <td className="text-end">
                                             <button
                                                 className="btn btn-sm btn-outline-danger"
-                                                onClick={() => handlePreEliminar(func.id)}
+                                                onClick={() => handleEliminarFuncion(func.id)}
                                             >
                                                 Eliminar
                                             </button>

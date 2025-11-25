@@ -40,6 +40,7 @@ export function PeliculasPage() {
         descripcion: '',
         imagen: null,
         CATEGORIA_id: 1,
+        estreno: 0
     });
     const [movieToBuy, setMovieToBuy] = useState(null);
     const [funcionesPorPelicula, setFuncionesPorPelicula] = useState([]);
@@ -158,6 +159,7 @@ export function PeliculasPage() {
         formData.append('descripcion', nuevaPelicula.descripcion);
         formData.append('CATEGORIA_id', nuevaPelicula.CATEGORIA_id);
         formData.append('imagen', nuevaPelicula.imagen);
+        formData.append('estreno', nuevaPelicula.estreno);
 
         try {
             // 3. Usar 'api' (con cookies) y la ruta '/agregarPelicula'
@@ -419,6 +421,26 @@ export function PeliculasPage() {
                                     </option>
                                 ))}
                             </select>
+                            {/* --- SWITCH DE ESTRENO --- */}
+                            <div className="form-check form-switch my-3">
+                                <input
+                                    className="form-check-input"
+                                    type="checkbox"
+                                    id="switchEstreno"
+                                    checked={nuevaPelicula.estreno === 1}
+                                    onChange={(e) => setNuevaPelicula({ 
+                                        ...nuevaPelicula, 
+                                        estreno: e.target.checked ? 1 : 0 
+                                    })}
+                                    style={{ cursor: 'pointer' }}
+                                />
+                                <label className="form-check-label text-white" htmlFor="switchEstreno">
+                                    ¿Es Estreno?
+                                </label>
+                                <div className="form-text text-muted">
+                                    Si activas esto, aparecerá en el carrusel principal.
+                                </div>
+                            </div>
 
                             <label htmlFor="imagen">Imagen de Portada</label>
                             <input type="file" id="imagen" name="imagen" accept="image/*" onChange={handleImageChange} required />

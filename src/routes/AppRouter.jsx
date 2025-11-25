@@ -1,3 +1,4 @@
+
 import {BrowserRouter, Routes, Route} from "react-router-dom"
 import { HomePage } from "../pages/HomePage.jsx"
 import LoginPage from "../pages/LoginPage.jsx"
@@ -6,6 +7,7 @@ import { PeliculasPage } from "../pages/PeliculasPage.jsx"
 import { AuthProvider, useAuth } from "../context/AuthContext.jsx";
 import { AdministracionPage } from "../pages/AdministracionPage.jsx"
 import ListarPeliculas from "../pages/ListarPeliculas.jsx";
+import EditarPeliculaPage from '../pages/EditarPeliculaPage';
 
 function AppRouter() {
   return (
@@ -29,6 +31,7 @@ function AppLR() {
                     <Route path="/peliculas" element={<PeliculasPage/>}/>
                     <Route path="/administracion" element={<AdministracionPage/>}/>
                     <Route path="/admin/listar-peliculas" element={<ListarPeliculas/>}/>
+                    <Route path="/admin/editar-pelicula/:id" element={<EditarPeliculaPage />} />
                     <Route path="/" element={<HomePage/>}/>
 
                 </Routes>

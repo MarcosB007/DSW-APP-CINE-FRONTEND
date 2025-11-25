@@ -3,9 +3,11 @@ import { Container } from 'react-bootstrap';
 import Header from './Header';
 import Footer from './Footer';
 import api from '../api/axios.js';
+import { useNavigate } from 'react-router-dom';
 import '../styles/listarPeliculas.css';
 
 function ListarPeliculasPage() {
+    const navigate = useNavigate();
     // 1. Estados para guardar los datos de la BD
     const [peliculas, setPeliculas] = useState([]);
     const [categorias, setCategorias] = useState([]);
@@ -59,6 +61,10 @@ function ListarPeliculasPage() {
 const peliculasFiltradas = filtroCategoria 
     ? peliculas.filter(p => p.CATEGORIA_id == filtroCategoria)
     : peliculas;
+    const handleEditar = (id) => {
+        // Esto le dice al navegador: "Ve a la ruta /admin/editar-pelicula/ EL ID"
+        navigate(`/admin/editar-pelicula/${id}`);
+    };
     return (
         <div className='admin-page-wrapper'>
             <Header />
@@ -119,7 +125,9 @@ const peliculasFiltradas = filtroCategoria
                                             </td>
 
                                             <td className="text-end">
-                                                <button className="btn btn-sm btn-primary me-2">
+                                                <button className="btn btn-sm btn-primary me-2"
+                                                onClick={() => handleEditar(pelicula.id)}
+                                                >
                                                     Editar
                                                 </button>
                                                 <button className="btn btn-sm btn-danger"

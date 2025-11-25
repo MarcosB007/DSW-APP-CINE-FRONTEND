@@ -283,12 +283,21 @@ export function PeliculasPage() {
                 <div className='cartelera-grid'>
                     {peliculas.map((pelicula) => (
                         <div key={pelicula.id} className='pelicula-card'>
-                            <img src={getImageUrl(pelicula.imagen)} alt={pelicula.nombre} />
+
+                            {/* 1. ENVOLVEMOS LA IMAGEN EN UN CONTENEDOR NUEVO */}
+                            <div className="image-container">
+                                <img src={getImageUrl(pelicula.imagen)} alt={pelicula.nombre} />
+
+                                {/* 2. AGREGAMOS LA DESCRIPCIÓN AQUÍ DENTRO */}
+                                <div className="overlay-description">
+                                    <p>{pelicula.descripcion || "Sin sinopsis disponible."}</p>
+                                </div>
+                            </div>
+
                             <div className='pelicula-info'>
                                 <h3>{pelicula.nombre}</h3>
-                                {/* Mostramos solo el año (ej: 2024) */}
                                 <p>{pelicula.duracion} - {pelicula.lanzamiento.split('-')[0]}</p>
-                                {/* 3. BOTÓN DE COMPRAR */}
+
                                 <button
                                     className="btn-comprar"
                                     onClick={() => handleComprarClick(pelicula)}
@@ -428,9 +437,9 @@ export function PeliculasPage() {
                                     type="checkbox"
                                     id="switchEstreno"
                                     checked={nuevaPelicula.estreno === 1}
-                                    onChange={(e) => setNuevaPelicula({ 
-                                        ...nuevaPelicula, 
-                                        estreno: e.target.checked ? 1 : 0 
+                                    onChange={(e) => setNuevaPelicula({
+                                        ...nuevaPelicula,
+                                        estreno: e.target.checked ? 1 : 0
                                     })}
                                     style={{ cursor: 'pointer' }}
                                 />

@@ -333,3 +333,41 @@
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+/* Contenedor para que la imagen y el texto vivan juntos */
+.image-container {
+    position: relative; /* Necesario para que el overlay se posicione encima */
+    overflow: hidden;   /* Recorta lo que sobresalga */
+    border-radius: 6px; /* Mantiene las esquinas redondeadas de tu diseño */
+}
+
+/* La capa oscura con el texto */
+.overlay-description {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    
+    background-color: rgba(0, 0, 0, 0.85); /* Negro al 85% de opacidad */
+    color: #ffffff;
+    
+    display: flex;
+    align-items: center;     /* Centra el texto verticalmente */
+    justify-content: center; /* Centra el texto horizontalmente */
+    padding: 20px;           /* Margen interno para que el texto no toque bordes */
+    text-align: center;
+    
+    opacity: 0; /* INVISIBLE POR DEFECTO */
+    transition: opacity 0.3s ease; /* Animación suave al aparecer */
+    
+    font-size: 0.9rem;
+    line-height: 1.5;
+    overflow-y: auto; /* Si el texto es muy largo, permite scroll */
+}
+
+/* EL EFECTO: Al pasar el mouse sobre la imagen, el overlay se vuelve visible */
+.image-container:hover .overlay-description {
+    opacity: 1;
+    cursor: help; /* Cambia el cursor para indicar que es info */
+}

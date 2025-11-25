@@ -5,6 +5,7 @@ import Footer from './Footer';
 import api from '../api/axios.js';
 import { useNavigate } from 'react-router-dom';
 import '../styles/listarPeliculas.css';
+import Swal from 'sweetalert2';
 
 function ListarPeliculasPage() {
     const navigate = useNavigate();
@@ -32,23 +33,47 @@ function ListarPeliculasPage() {
 
         cargarDatos();
     }, []);
-        // --- LÓGICA DE ELIMINAR (BAJA LÓGICA) ---
-    const handleEliminar = async (id) => {
-        // Preguntamos primero
-        if (!window.confirm("¿Seguro que quieres dar de baja esta película?")) return;
+    // --- LÓGICA DE ELIMINAR (BAJA LÓGICA) ---
+    const handleEliminar = (id) => {
+        // 1. Disparamos la alerta de confirmación
+        Swal.fire({
+            title: "¿Estás seguro?",
+            text: "¡No podrás revertir esta acción!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar"
+        }).then(async (result) => {
+            // 2. Si el usuario hace clic en "Sí, dar de baja"...
+            if (result.isConfirmed) {
+                try {
+                    // Hacemos la petición al backend
+                    await api.put(`/eliminarPelicula?id=${id}`);
 
-        try {
-            // Llamamos a la ruta que creamos recien
-            await api.put(`/eliminarPelicula?id=${id}`);
-            
-            // Actualizamos la tabla visualmente quitando la pelicula borrada
-            setPeliculas(peliculas.filter(p => p.id !== id));
-            alert("Película dada de baja con éxito");
-            
-        } catch (error) {
-            console.error("Error al eliminar:", error);
-            alert("Hubo un error al intentar eliminar.");
-        }
+                    // Actualizamos la tabla visualmente
+                    setPeliculas(peliculas.filter(p => p.id !== id));
+
+                    // 3. Mostramos alerta de Éxito
+                    Swal.fire({
+                        title: "¡Eliminado!",
+                        text: "La película ha sido dada de baja con éxito.",
+                        icon: "success"
+                    });
+
+                } catch (error) {
+                    console.error("Error al eliminar:", error);
+
+                    // 4. Mostramos alerta de Error (si falla el backend)
+                    Swal.fire({
+                        title: "Error",
+                        text: "Hubo un problema al intentar eliminar la película.",
+                        icon: "error"
+                    });
+                }
+            }
+        });
     };
 
     // 3. Función auxiliar para obtener el nombre de la categoría según el ID
@@ -58,9 +83,9 @@ function ListarPeliculasPage() {
     };
 
     // Si hay algo en 'filtroCategoria', filtramos. Si no, mostramos todas.
-const peliculasFiltradas = filtroCategoria 
-    ? peliculas.filter(p => p.CATEGORIA_id == filtroCategoria)
-    : peliculas;
+    const peliculasFiltradas = filtroCategoria
+        ? peliculas.filter(p => p.CATEGORIA_id == filtroCategoria)
+        : peliculas;
     const handleEditar = (id) => {
         // Esto le dice al navegador: "Ve a la ruta /admin/editar-pelicula/ EL ID"
         navigate(`/admin/editar-pelicula/${id}`);
@@ -74,20 +99,20 @@ const peliculasFiltradas = filtroCategoria
                     <div className="admin-header-container">
                         <h2 className="admin-title">Gestión de Películas</h2>
                         <div style={{ width: '200px' }}>
-    <select 
-        className="form-select bg-dark text-white border-secondary"
-        value={filtroCategoria}
-        onChange={(e) => setFiltroCategoria(e.target.value)}
-    >
-        <option value="">Todas las categorías</option>
-        {categorias.map(cat => (
-            <option key={cat.id} value={cat.id}>
-                {cat.nombre}
-            </option>
-        ))}
-    </select>
-</div>
-                        
+                            <select
+                                className="form-select bg-dark text-white border-secondary"
+                                value={filtroCategoria}
+                                onChange={(e) => setFiltroCategoria(e.target.value)}
+                            >
+                                <option value="">Todas las categorías</option>
+                                {categorias.map(cat => (
+                                    <option key={cat.id} value={cat.id}>
+                                        {cat.nombre}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
                     </div>
 
                     <div className="table-responsive rounded shadow-sm">
@@ -126,12 +151,12 @@ const peliculasFiltradas = filtroCategoria
 
                                             <td className="text-end">
                                                 <button className="btn btn-sm btn-primary me-2"
-                                                onClick={() => handleEditar(pelicula.id)}
+                                                    onClick={() => handleEditar(pelicula.id)}
                                                 >
                                                     Editar
                                                 </button>
                                                 <button className="btn btn-sm btn-danger"
-                                                onClick={() => handleEliminar(pelicula.id)}
+                                                    onClick={() => handleEliminar(pelicula.id)}
                                                 >
                                                     Eliminar
                                                 </button>

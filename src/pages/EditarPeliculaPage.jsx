@@ -4,6 +4,7 @@ import { Container, Form, Button, Row, Col } from 'react-bootstrap';
 import api from '../api/axios.js';
 import Header from './Header.jsx';
 import Footer from './Footer.jsx';
+import Swal from 'sweetalert2';
 
 // Estilos inline para igualar tu imagen (Fondo negro, inputs oscuros)
 const darkInputStyle = {
@@ -25,7 +26,7 @@ function EditarPeliculaPage() {
 
     const [categorias, setCategorias] = useState([]);
     const [previewImagen, setPreviewImagen] = useState(null);
-    
+
     // Estado del formulario
     const [datos, setDatos] = useState({
         nombre: '',
@@ -64,9 +65,9 @@ function EditarPeliculaPage() {
                     estreno: peli.estreno, // Esto vendrá como 1 o 0 de la BD
                     imagen: null // Inicialmente null porque no ha subido archivo nuevo
                 });
-                
+
                 // Guardamos la imagen vieja para mostrarla de preview
-                setPreviewImagen(peli.imagen); 
+                setPreviewImagen(peli.imagen);
             }
         } catch (error) {
             console.error("Error cargando datos:", error);
@@ -94,7 +95,7 @@ function EditarPeliculaPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         const formData = new FormData();
         formData.append('nombre', datos.nombre);
         formData.append('descripcion', datos.descripcion);
@@ -111,21 +112,29 @@ function EditarPeliculaPage() {
         try {
             // Usamos PUT y pasamos el ID en la URL
             await api.put(`/editarPelicula?id=${id}`, formData);
-            alert("Película actualizada con éxito");
+            Swal.fire({
+                title: "Pelicula actualizada con éxito!",
+                icon: "success",
+                draggable: true
+            });
             navigate('/admin/listar-peliculas'); // Volver a la tabla
         } catch (error) {
             console.error("Error actualizando:", error);
-            alert("Error al guardar los cambios");
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "No se pudo editar la pelicula",
+            });
         }
     };
 
     return (
         <div style={{ backgroundColor: '#000', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
             <Header />
-            
-            <Container className="py-5"style={{ marginTop: '60px' }}>
+
+            <Container className="py-5" style={{ marginTop: '60px' }}>
                 <div style={{ maxWidth: '600px', margin: '0 auto', backgroundColor: '#111', padding: '2rem', borderRadius: '10px', boxShadow: '0 0 20px rgba(200,0,0,0.2)' }}>
-                    
+
                     <div className="d-flex justify-content-between align-items-center mb-4">
                         <h2 className="text-white">Editar Película</h2>
                         {/* Botón X para cerrar (volver) */}
@@ -173,7 +182,7 @@ function EditarPeliculaPage() {
                             <Col md={6}>
                                 {/* AQUÍ ESTÁ LO QUE PEDISTE DEL ESTRENO */}
                                 <Form.Group className="mt-4">
-                                    <Form.Check 
+                                    <Form.Check
                                         type="switch"
                                         id="estreno-switch"
                                         label="¿Es Estreno?"
@@ -189,12 +198,12 @@ function EditarPeliculaPage() {
                         <Form.Group className="mt-3">
                             <label style={labelStyle}>Imagen de Portada (Dejar vacío para mantener la actual)</label>
                             <Form.Control type="file" onChange={handleImageChange} style={darkInputStyle} accept="image/*" />
-                            
+
                             {/* Previsualización pequeña */}
                             {previewImagen && (
                                 <div className="mt-2">
-                                    <img src={previewImagen.startsWith('http') || previewImagen.startsWith('blob') ? previewImagen : `http://localhost:3001/${previewImagen}`} 
-                                         alt="Preview" style={{ height: '80px', borderRadius: '5px' }} />
+                                    <img src={previewImagen.startsWith('http') || previewImagen.startsWith('blob') ? previewImagen : `http://localhost:3001/${previewImagen}`}
+                                        alt="Preview" style={{ height: '80px', borderRadius: '5px' }} />
                                 </div>
                             )}
                         </Form.Group>

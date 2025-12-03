@@ -1,11 +1,150 @@
-/* src/App.css */
+/* ------------------------------------------------------------- */
+/* 1. HERO SECTION: Contenedor Principal (Flujo Vertical Limpio) */
+/* ------------------------------------------------------------- */
+.hero-section {
+    flex-grow: 1;
+    background-image: url('/images/cine1024.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 100px;
 
-.app-container {
-  display: flex; /* 1. Activa Flexbox */
-  flex-direction: column; /* 2. Apila los hijos verticalmente (Header, main, Footer) */
-  min-height: 100vh; /* 3. Asegura que el contenedor ocupe AL MENOS el 100% de la altura de la pantalla */
 }
 
-.main-content {
-  flex-grow: 1; /* 4. (¡La magia!) Hace que el contenido principal "crezca" y empuje al Footer hacia abajo, ocupando todo el espacio sobrante. */
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+}
+
+.hero-section>* {
+    z-index: 2;
+    position: relative;
+    flex-grow: 1;
+}
+
+.hero-title {
+
+    margin-bottom: -60px;
+    margin-top: 70px;
+    width: 100%;
+    text-align: center;
+    z-index: 10;
+
+    font-family: 'Times New Roman', Georgia, serif;
+    font-size: 4rem;
+    font-weight: 700;
+    letter-spacing: 6px;
+    color: #ede9e8;
+    text-shadow: 1px 1px 3px rgba(143, 37, 37, 0.9), 0 0 10px #e76f3c;
+}
+
+.carousel-wrapper {
+    width: 90%;
+    margin: 0 auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 0 50px;
+}
+
+.carousel-container {
+    width: 100%;
+    overflow-x: scroll;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+}
+
+.carousel-container::-webkit-scrollbar {
+    display: none;
+}
+
+.carousel-track {
+    display: flex;
+    gap: 20px;
+    width: max-content;
+}
+
+body,
+html,
+.app-container {
+    overflow-x: hidden;
+}
+
+.pelicula-card:hover {
+    transform: scale(1.05);
+    z-index: 50; 
+}
+
+.arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    font-size: 2rem;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    z-index: 50;
+    border-radius: 5px;
+    opacity: 0.8;
+    transition: opacity 0.2s, background-color 0.2s;
+}
+
+.arrow:hover {
+    opacity: 1;
+    background-color: #e76f3c; /* Un toque de color al pasar el mouse (opcional) */
+}
+
+.left-arrow {
+    left: 0px;
+}
+
+.right-arrow {
+    right: 0px;
+}
+
+.pelicula-card {
+    min-width: 220px;
+    max-width: 220px;
+    flex-shrink: 0;
+    position: relative;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    text-align: center;
+}
+
+.pelicula-card img {
+    width: 100%;
+    height: 320px;
+    object-fit: cover; /* Recorta la imagen sin deformarla */
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Sombra elegante */
+}
+
+.pelicula-info h3 {
+    color: #FDFDFD;
+    margin-top: 10px;
+    font-size: 1rem;
+    font-weight: 500;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8); /* Lectura mejorada sobre fondos oscuros */
+}
+
+.pelicula-info p {
+    color: #ccc;
+    font-size: 0.85rem;
+    margin-top: 5px;
 }

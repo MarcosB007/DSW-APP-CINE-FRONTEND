@@ -1,0 +1,83 @@
+/* --- LAYOUT PRINCIPAL --- */
+
+
+.admin-page-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: transparent; /* Fondo oscuro sólido */
+    position: relative;
+    z-index: 10; /* Asegura estar sobre el fondo animado */
+    
+}
+
+/* --- CONTENEDOR CENTRAL --- */
+.admin-content {
+    flex: 1; /* Ocupa el espacio disponible */
+    padding-bottom: 3rem;
+    width: 100;
+    /* ¡AQUÍ ESTÁ LA SOLUCIÓN VISUAL! */
+    /* Empujamos el contenido hacia abajo para que el Header fijo no lo tape */
+    margin-top: 100px; 
+}
+
+/* --- TÍTULOS Y CABECERAS --- */
+.admin-header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.admin-title {
+    color: white;
+    margin-bottom: 0;
+    font-family: 'Arial', sans-serif; /* O tu fuente preferida */
+}
+
+/* --- TABLA OSCURA --- */
+.table-dark-custom {
+    background-color: #212529;
+    color: white;
+    vertical-align: middle; /* Centra el texto verticalmente */
+}
+
+.table-dark-custom thead th {
+    background-color: #701918; /* Azul o el color de tu marca */
+    border-bottom: none;
+    padding: 1rem;
+}
+
+.table-dark-custom tbody td {
+    padding: 1rem;
+    border-color: #373b3e;
+    
+}
+/* Efecto Hover (al pasar el mouse por la fila) */
+.table-dark-custom tbody tr:hover {
+    background-color: #2c3034;
+    color: white !important;
+}
+
+/* --- BOTÓN NUEVA PELÍCULA --- */
+.btn-genero {
+    background-color: #5e1d0e !important;  
+    border-color: #08050d !important;
+    color: white !important;
+    font-weight: bold;
+    padding: 10px 20px;
+    transition: all 0.3s ease;
+}
+
+.btn-genero:hover {
+    background-color: #d23815 !important; 
+    border-color: #09070c !important;
+    transform: scale(1.05);
+}
+/* Forzamos al footer a no tener márgenes extra */
+.admin-page-wrapper footer {
+    margin-top: 0 !important; 
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    height: auto !important;
+}

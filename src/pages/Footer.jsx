@@ -20,7 +20,7 @@ const Footer = () => {
             <ul className="list-unstyled footer-links">
               <li><a href="#home">Inicio</a></li>
               <li><a href="#peliculas">Películas</a></li>
-              <li><a href="#series">Series</a></li>
+              <li><a href="#registrarse">Registrarse</a></li>
               {/* Puedes añadir más enlaces aquí */}
             </ul>
           </Col>

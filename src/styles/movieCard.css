@@ -1,0 +1,92 @@
+/* src/assets/styles/MovieCard.css */
+
+.movie-card {
+  background-color: #343a40; /* Fondo gris oscuro para la tarjeta */
+  color: #f8f9fa;
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.movie-card:hover {
+  transform: translateY(-8px); /* Efecto "lift" al pasar el ratón */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.card-img-container {
+  position: relative;
+}
+
+.movie-poster {
+  aspect-ratio: 2 / 3; /* Proporción clásica de póster */
+  object-fit: cover;
+  background-color: #212529; /* Color de fondo mientras carga la imagen */
+}
+
+/* Ícono de Favorito (Corazón) */
+.favorite-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 1.5rem;
+  color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 50%;
+  padding: 0.5rem;
+  line-height: 1;
+  text-decoration: none;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.favorite-icon:hover {
+  color: #dc3545; /* Rojo al pasar el ratón */
+  transform: scale(1.1);
+}
+
+/* Badge de Calificación */
+.rating-badge {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.7) !important;
+}
+
+.star-icon {
+  color: #ffc107; /* Amarillo estrella */
+  margin-right: 0.3rem;
+  vertical-align: middle;
+}
+
+/* Cuerpo de la tarjeta */
+.movie-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  /* Acortar texto si es muy largo */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.movie-year {
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+.genres-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  min-height: 24px; /* Evita que el botón salte si no hay géneros */
+}
+
+.genres-container .badge {
+  font-size: 0.75rem;
+  font-weight: 500;
+}

@@ -1,29 +1,27 @@
-/* src/assets/styles/Footer.css */
-
 .footer-custom {
-  background-color: #212529; /* Un tono oscuro para el fondo */
-  color: #f8f9fa; /* Color de texto claro */
-  padding: 3rem 0; /* Espaciado interno */
-  font-family: 'Arial', sans-serif; /* Fuente general */
+  background-color: #212529;
+  color: #f8f9fa; 
+  padding: 1rem 0; 
+  font-family: 'Arial', sans-serif;
 }
 
 .footer-logo {
   font-size: 1.8rem;
   font-weight: bold;
-  color: #ffffff; /* Color del logo */
-  margin-bottom: 0.8rem;
+  color: #ffffff; 
+  margin-bottom: 0.5rem;
 }
 
 .footer-text {
   font-size: 0.9rem;
-  color: #adb5bd; /* Color de texto secundario */
+  color: #adb5bd; 
 }
 
 .footer-title {
   font-size: 1.2rem;
   font-weight: bold;
-  color: #ffffff; /* Color de los títulos de sección */
-  margin-bottom: 1.5rem;
+  color: #ffffff; 
+  margin-bottom: 0.5rem;
 }
 
 .footer-links {
@@ -31,7 +29,7 @@
 }
 
 .footer-links li {
-  margin-bottom: 0.7rem;
+  margin-bottom: 0rem;
 }
 
 .footer-links a,
@@ -63,14 +61,14 @@
 }
 
 .footer-divider {
-  border-top: 1px solid #495057; /* Línea divisoria */
+  border-top: 2px solid #495057; /* Línea divisoria */
   margin-top: 2rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 .footer-legal-links .list-inline-item {
-  margin-right: 1rem;
-  margin-left: 1rem;
+  margin-right: 2rem;
+  margin-left: 2rem;
   color: #adb5bd; /* Color del separador "|" */
 }
 
